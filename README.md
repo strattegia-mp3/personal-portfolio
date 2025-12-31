@@ -1,18 +1,10 @@
 # Victor Rocha / strattegia.dev
 
 <p align="center">
-  <a href="https://nextjs.org/">
-    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
-  </a>
-  <a href="https://www.typescriptlang.org/">
-    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
-  </a>
-  <a href="https://vercel.com/">
-    <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
-  </a>
-  <a href="https://opensource.org/licenses/CC-BY-NC-4.0">
-    <img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-7f5af0?style=for-the-badge" alt="License: CC BY-NC 4.0" />
-  </a>
+  <a href="https://nextjs.org/"><img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" /></a>
+  <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" /></a>
+  <a href="https://vercel.com/"><img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" /></a>
+  <a href="https://opensource.org/licenses/CC-BY-NC-4.0"><img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-7f5af0?style=for-the-badge" alt="License: CC BY-NC 4.0" /></a>
 </p>
 
 **Uma vitrine digital de alta performance.**
@@ -61,8 +53,8 @@ Siga os passos abaixo para clonar e executar o projeto na sua máquina.
 ### 1. Clone o repositório
 
 ```
-git clone https://github.com/seu-usuario/strattegia-portfolio.git
-cd strattegia-portfolio
+git clone https://github.com/strattegia-mp3/personal-portfolio.git
+cd personal-portfolio
 ```
 
 ### 2. Instale as dependências
@@ -152,7 +144,3 @@ Este projeto utiliza como base o template **Magic Portfolio** da **Once UI**, di
 - **Desenvolvimento & Customizações:** Victor Rocha
 
 Desenvolvido com 💜 e TypeScript por **Victor Rocha**.
-
-```
-
-```
