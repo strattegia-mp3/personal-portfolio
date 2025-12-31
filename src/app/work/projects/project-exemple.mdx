@@ -1,0 +1,140 @@
+---
+title: "MythMirror"
+title_pt: "MythMirror: Teste de Projetos"
+title_en: "MythMirror: Project Test"
+publishedAt: "2024-05-20"
+summary: "Full-stack ecosystem for RPG table management with real-time features."
+summary_pt: "Ecossistema Full-stack para gerenciamento de mesas de RPG com funcionalidades em tempo real."
+summary_en: "Full-stack ecosystem for RPG table management with real-time features."
+images:
+  - "/images/gallery/horizontal-2.jpg"
+  - "/images/gallery/horizontal-3.jpg"
+  - "/images/gallery/horizontal-4.jpg"
+team:
+  - name: "Victor Rocha"
+    role: "Lead Developer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://github.com/victor-jrocha"
+tag: "Full Stack"
+tag_pt: "Full Stack"
+tag_en: "Full Stack"
+---
+
+<Pt>
+  ## O Desafio
+
+Jogadores e Mestres de RPG (TTRPG) sofrem com a fragmentação: fichas em PDF, rolagem de dados em apps separados e mapas em outras plataformas.
+
+O objetivo do **MythMirror** foi unificar essa experiência em uma _Single Page Application_ (SPA) performática, focando em:
+
+- **Sincronização:** Atualização de vida e inventário em tempo real.
+- **Imersão:** Dados 3D com física realista usando Cannon.js.
+- **Acessibilidade:** Interface adaptável para Mobile e Desktop.
+</Pt>
+
+<En>
+  ## The Challenge
+
+RPG (TTRPG) players and Game Masters suffer from fragmentation: character sheets in PDFs, dice rolling in separate apps, and maps on other platforms.
+
+The goal of **MythMirror** was to unify this experience into a high-performance _Single Page Application_ (SPA), focusing on:
+
+- **Synchronization:** Real-time health and inventory updates.
+- **Immersion:** 3D dice with realistic physics using Cannon.js.
+- **Accessibility:** Adaptive interface for both Mobile and Desktop.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Arquitetura"
+    description="O projeto utiliza uma arquitetura baseada em eventos para garantir que todos os jogadores vejam o resultado dos dados simultaneamente."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Architecture"
+    description="The project uses an event-driven architecture to ensure all players see dice results simultaneously."
+  />
+</En>
+
+
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Category", key: "col1" },
+      { content: "Technology", key: "col2" },
+    ],
+    rows: [
+      ["Frontend", "Next.js 14, TypeScript, TailwindCSS"],
+      ["State Management", "Zustand, React Query"],
+      ["Real-time", "Socket.io (WebSocket)"],
+      ["3D Physics", "Three.js, React-three-fiber, Cannon.js"],
+      ["Backend", "Node.js, Express, PostgreSQL"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: 
+  
+  Hook de Rolagem de Dados Para gerenciar a física dos
+  dados sem travar a thread principal do navegador, implementamos a lógica
+  dentro de um Web Worker, controlado por um *Custom Hook*.
+</Pt>
+
+<En>
+  ## Technical Highlight: 
+  
+  Dice Roll Hook To manage dice physics without freezing
+  the browser's main thread, we implemented the logic inside a Web Worker,
+  controlled by a *Custom Hook*.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `import { useState, useCallback } from 'react';
+import { useWorker } from '@/hooks/useWorker';
+
+export const useDiceRoll = () => {
+  const [isRolling, setIsRolling] = useState(false);
+  const [result, setResult] = useState<number | null>(null);
+
+const roll = useCallback((notation: string) => {
+setIsRolling(true);
+// Offload calculation to worker
+worker.postMessage({ type: 'ROLL', notation });
+}, []);
+
+return { roll, result, isRolling };
+};`,
+language: "typescript",
+label: "useDiceRoll.ts",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+    O sistema reduziu o tempo de _setup_ de novas mesas em cerca de **40%**. A latência de comunicação via WebSocket manteve-se abaixo de 50ms, garantindo que reações de combate fossem instantâneas.
+
+    O maior desafio foi otimizar a renderização 3D em dispositivos móveis, o que foi resolvido reduzindo a contagem de polígonos dos modelos de dados e usando _Texture Baking_.
+
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The system reduced new table setup time by approximately **40%**. WebSocket communication latency remained under 50ms, ensuring combat reactions felt instantaneous.
+
+The biggest challenge was optimizing 3D rendering on mobile devices, which was solved by reducing polygon counts on dice models and utilizing _Texture Baking_.
+
+</En>
