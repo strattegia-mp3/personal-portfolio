@@ -16,6 +16,8 @@ export interface ProjectData {
     images: string[];
     team?: { avatar: string }[];
     link?: string;
+    repository?: string;
+    draft?: boolean;
     [key: string]: any;
   };
   content: string;
@@ -28,10 +30,17 @@ interface ProjectsProps {
 }
 
 export function Projects({ range, exclude, posts }: ProjectsProps) {
-  let displayedProjects =
-    exclude && exclude.length > 0
-      ? posts.filter((post) => !exclude.includes(post.slug))
-      : posts;
+  // Filtra drafts e excluídos
+  let displayedProjects = posts.filter(
+    (post) => !post.metadata.draft && !(exclude && exclude.includes(post.slug)),
+  );
+
+  // Ordena por data de publicação (mais recente primeiro)
+  displayedProjects = displayedProjects.sort(
+    (a, b) =>
+      new Date(b.metadata.publishedAt).getTime() -
+      new Date(a.metadata.publishedAt).getTime(),
+  );
 
   if (range) {
     const start = range[0] - 1;
@@ -58,6 +67,7 @@ export function Projects({ range, exclude, posts }: ProjectsProps) {
             post.metadata.team?.map((member) => ({ src: member.avatar })) || []
           }
           link={post.metadata.link || ""}
+          repository={post.metadata.repository}
         />
       ))}
     </Column>

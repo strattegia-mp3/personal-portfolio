@@ -1,0 +1,145 @@
+---
+title: "MythMirror Landing Page"
+title_pt: "MythMirror: O Futuro da Identidade Digital"
+title_en: "MythMirror: The Future of Digital Identity"
+publishedAt: "2026-05-11"
+summary: "Immersive 3D landing page for an EdTech ecosystem blending Education, Finance, and Leisure."
+summary_pt: "Landing page imersiva 3D para um ecossistema EdTech que funde Educação, Finanças e Lazer."
+summary_en: "Immersive 3D landing page for an EdTech ecosystem blending Education, Finance, and Leisure."
+images:
+  - "/images/projects/mythmirror/mythmirror_og.webp"
+  - "/images/projects/mythmirror/mythmirror-lp1_og.webp"
+  - "/images/projects/mythmirror/mythmirror-lp2_og.webp"
+  - "/images/projects/mythmirror/mythmirror-lp3_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "CEO & Lead Developer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+  - name: "Matheus Filipe"
+    role: "Co-Founder"
+link: "https://mythmirror.vercel.app/"
+tag: "Frontend 3D"
+tag_pt: "Frontend 3D"
+tag_en: "Frontend 3D"
+---
+
+<Pt>
+  ## O Desafio
+
+A MythMirror é uma startup EdTech com a audaciosa missão de redefinir a identidade digital, unindo Educação, Finanças e Lazer por meio da gamificação. 
+
+O desafio era construir não apenas um site, mas uma **experiência imersiva** que servisse como a porta de entrada perfeita para o ecossistema. Precisávamos de:
+
+- **Estética Futurista:** Um tema cinematográfico em Dark Mode profundo, integrando Glassmorphism e elementos Neon.
+- **Imersão sem Perda de Performance:** Utilização de modelos 3D interativos (como DNA e Networks) que funcionassem fluidamente, inclusive em dispositivos móveis.
+- **Conversão Integrada:** Formulários B2B e B2C integrados de forma transparente, sem a necessidade de uma infraestrutura de backend complexa.
+</Pt>
+
+<En>
+  ## The Challenge
+
+MythMirror is an EdTech startup with the bold mission of redefining digital identity, merging Education, Finance, and Leisure through gamification.
+
+The challenge was to build not just a website, but an **immersive experience** that served as the perfect gateway to the ecosystem. We needed:
+
+- **Futuristic Aesthetics:** A cinematic deep Dark Mode theme, integrating Glassmorphism and Neon elements.
+- **Immersion without Performance Loss:** Interactive 3D models (like DNA and Networks) running smoothly, even on mobile devices.
+- **Integrated Conversion:** B2B and B2C forms integrated seamlessly without the need for complex backend infrastructure.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Otimização 3D"
+    description="Para garantir que as animações em Three.js não prejudicassem o carregamento inicial, implementamos uma estratégia agressiva de Lazy Loading e otimização de polígonos para acesso mobile."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="3D Optimization"
+    description="To ensure Three.js animations didn't bottleneck the initial load, we implemented an aggressive Lazy Loading strategy and polygon optimization for mobile access."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Core", "Next.js 14 (App Router), TypeScript"],
+      ["Estilização", "Tailwind CSS, Framer Motion"],
+      ["Experiência 3D", "React Three Fiber, Drei, Three.js"],
+      ["Integração de Dados", "Server Actions (Zero Backend)"],
+      ["Email & Leads", "Brevo API"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Server Actions & Brevo
+  
+  Para manter a arquitetura enxuta e segura (Zero Backend), utilizamos as **Server Actions** do Next.js 14. Isso permitiu conectar nossos formulários de captação de leads diretamente à API do Brevo rodando a lógica exclusivamente no lado do servidor, protegendo chaves de API e melhorando o tempo de resposta.
+</Pt>
+
+<En>
+  ## Technical Highlight: Server Actions & Brevo
+  
+  To keep the architecture lean and secure (Zero Backend), we utilized Next.js 14 **Server Actions**. This allowed us to connect our lead capture forms directly to the Brevo API, running the logic exclusively on the server side, protecting API keys, and improving response times.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `'use server';
+
+import { revalidatePath } from 'next/cache';
+
+export async function subscribeToNewsletter(formData: FormData) {
+  const email = formData.get('email');
+
+  try {
+    const response = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'api-key': process.env.BREVO_API_KEY as string,
+      },
+      body: JSON.stringify({ email, listIds: [2] }),
+    });
+
+    if (!response.ok) throw new Error('Failed to subscribe');
+    
+    return { success: true, message: 'Welcome to the ecosystem!' };
+  } catch (error) {
+    return { success: false, message: 'Subscription failed. Try again.' };
+  }
+}`,
+language: "typescript",
+label: "actions/subscribe.ts",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O projeto resultou em uma landing page de altíssima fidelidade visual. A combinação de **Framer Motion** para o DOM 2D com o **React Three Fiber** no Canvas 3D criou uma narrativa de rolagem (scroll-telling) envolvente. 
+
+O maior desafio técnico foi sincronizar os contextos de I18n (Context API) com os componentes renderizados dentro do Canvas 3D, exigindo pontes de estado cuidadosas para garantir que a troca de idioma (PT/EN) refletisse instantaneamente nos textos flutuantes dos modelos tridimensionais.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The project resulted in a visual powerhouse of a landing page. Combining **Framer Motion** for the 2D DOM with **React Three Fiber** on the 3D Canvas created an engaging scroll-telling narrative.
+
+The biggest technical challenge was synchronizing the I18n contexts (Context API) with the components rendered inside the 3D Canvas, requiring careful state bridges to ensure language switching (PT/EN) instantly reflected on the floating text of the three-dimensional models.
+</En>

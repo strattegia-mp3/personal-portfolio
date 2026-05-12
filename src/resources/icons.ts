@@ -20,6 +20,7 @@ import {
   PiGridFourDuotone,
   PiBookBookmarkDuotone,
   PiImageDuotone,
+  PiFileCSharp,
 } from "react-icons/pi";
 
 import {
@@ -28,6 +29,8 @@ import {
   SiNodedotjs,
   SiPython,
   SiMongodb,
+  SiSelenium,
+  SiCypress,
 } from "react-icons/si";
 
 import {
@@ -43,7 +46,11 @@ import {
   FaWhatsapp,
   FaReddit,
   FaTelegram,
+  FaGears,
+  FaCubes,
+  FaPuzzlePiece
 } from "react-icons/fa6";
+
 import {
   BiChart,
   BiChat,
@@ -56,10 +63,13 @@ import {
   BiServer,
   BiUser,
   BiWifi,
+  BiTestTube,
 } from "react-icons/bi";
+
 import { BsDatabase } from "react-icons/bs";
-import { FaLinux } from "react-icons/fa";
-import { HiLightningBolt, HiOutlineLightningBolt } from "react-icons/hi";
+import { FaLinux, FaJava, FaRobot } from "react-icons/fa";
+import { HiOutlineLightningBolt } from "react-icons/hi";
+import { MdTerminal } from "react-icons/md";
 
 export const iconLibrary: Record<string, IconType> = {
   arrowUpRight: HiArrowUpRight,
@@ -97,12 +107,22 @@ export const iconLibrary: Record<string, IconType> = {
   nodedotjs: SiNodedotjs,
   python: SiPython,
   mongodb: SiMongodb,
+  csharp: PiFileCSharp,
+  java: FaJava,
+  cypress: SiCypress,
+  selenium: SiSelenium,
+  test: BiTestTube,
+  robot: FaRobot,
+  terminal: MdTerminal,
+  gears: FaGears,
   lock: BiLock,
   wifi: BiWifi,
+  cubes: FaCubes,
   user: BiUser,
   chart: BiChart,
   lightning: HiOutlineLightningBolt,
   chat: BiChat,
+  puzzle: FaPuzzlePiece,
   facebook: FaFacebook,
   pinterest: FaPinterest,
   whatsapp: FaWhatsapp,

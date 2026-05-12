@@ -10,7 +10,6 @@ import {
 } from "@/types";
 import { Line, Row, Text } from "@once-ui-system/core";
 
-// Interface para definir a estrutura completa de cada idioma
 export type ContentTranslation = {
   person: Person;
   social: Social;
@@ -91,11 +90,11 @@ const pt: ContentTranslation = {
           <strong className="ml-4">Destaque</strong>{" "}
           <Line background="brand-alpha-strong" vert height="20" />
           <Text marginRight="4" onBackground="brand-medium">
-            Conheça a MythMirror
+            Conheça a RenderUp
           </Text>
         </Row>
       ),
-      href: "/work/mythmirror-startup",
+      href: "/work/renderup",
     },
   },
   about: {
@@ -140,6 +139,28 @@ const pt: ContentTranslation = {
       title: "Experiência Profissional",
       experiences: [
         {
+          company: "RenderUp",
+          timeframe: "Mar 2026 - Presente",
+          role: "Co-founder & Head de Tecnologia e Automação",
+          achievements: [
+            <>
+              Responsável por toda a infraestrutura tecnológica e governança de
+              TI que sustenta as operações da agência de pós-produção e motion
+              design.
+            </>,
+            <>
+              Implementação de automações de processos utilizando Inteligência
+              Artificial e Prompt Engineering, otimizando desde o onboarding até
+              a renderização final.
+            </>,
+            <>
+              Estruturação de fluxos de trabalho ágeis para garantir
+              escalabilidade, agilidade máxima e qualidade visual de excelência.
+            </>,
+          ],
+          images: [],
+        },
+        {
           company: "MythMirror",
           timeframe: "Jan 2023 - Presente",
           role: "Sócio Fundador & CEO",
@@ -164,6 +185,29 @@ const pt: ContentTranslation = {
         },
         {
           company: "SL Desenv. e Qualidade de Software",
+          timeframe: "Jan 2026 - Mai 2026",
+          role: "Estagiário em Automação de Testes (QA)",
+          achievements: [
+            <>
+              Desenvolvimento e manutenção de scripts de testes automatizados no
+              ecossistema .NET (C#) em conjunto com Selenium WebDriver e NUnit
+              para asserções.
+            </>,
+            <>
+              Aplicação da abordagem BDD (Behavior-Driven Development)
+              escrevendo cenários em Gherkin e executando-os via Reqnroll,
+              garantindo alinhamento entre regras de negócio e cobertura
+              técnica.
+            </>,
+            <>
+              Automação de rotinas operacionais e otimização de desempenho e
+              acessibilidade das plataformas.
+            </>,
+          ],
+          images: [],
+        },
+        {
+          company: "SL Desenv. e Qualidade de Software",
           timeframe: "Maio 2023 - Dez 2023",
           role: "Desenvolvedor Full Stack Júnior",
           achievements: [
@@ -175,11 +219,6 @@ const pt: ContentTranslation = {
               Participação na arquitetura de duas aplicações completas,
               utilizando React.js e TailwindCSS para interfaces modernas, além
               da otimização de performance em Progressive Web Apps (PWAs).
-            </>,
-            <>
-              Reconhecido pela liderança técnica, comunicação efetiva e
-              capacidade de colaborar em projetos complexos dentro de um
-              ambiente ágil.
             </>,
           ],
           images: [],
@@ -226,20 +265,41 @@ const pt: ContentTranslation = {
           tags: [
             { name: "JavaScript", icon: "javascript" },
             { name: "TypeScript", icon: "typescript" },
+            { name: "C#", icon: "csharp" },
+            { name: "Python", icon: "python" },
+            { name: "Java", icon: "java" },
             { name: "React.js", icon: "react" },
             { name: "Node.js", icon: "nodedotjs" },
             { name: "TailwindCSS", icon: "tailwind" },
-            { name: "API REST", icon: "cloud" },
             { name: "POO", icon: "code" },
             { name: "Arquitetura de Sistemas", icon: "server" },
           ],
           images: [],
         },
         {
-          title: "Dados & Infraestrutura",
+          title: "Qualidade & Automação (QA)",
           description: (
             <>
-              Gestão de dados e segurança para suporte a decisões inteligentes.
+              Garantia de estabilidade, testes e automação de processos
+              inteligentes.
+            </>
+          ),
+          tags: [
+            { name: "Cypress", icon: "cypress" },
+            { name: "Selenium WebDriver", icon: "selenium" },
+            { name: "NUnit", icon: "test" },
+            { name: "BDD / Gherkin", icon: "check" },
+            { name: "Inteligência Artificial", icon: "robot" },
+            { name: "Prompt Engineering", icon: "terminal" },
+            { name: "Automação Operacional", icon: "gears" },
+          ],
+          images: [],
+        },
+        {
+          title: "Dados, Redes & Infraestrutura",
+          description: (
+            <>
+              Gestão de dados e hardware para suporte a decisões inteligentes.
             </>
           ),
           tags: [
@@ -247,8 +307,8 @@ const pt: ContentTranslation = {
             { name: "SQL", icon: "database" },
             { name: "Git/GitHub", icon: "githubAlt" },
             { name: "Linux", icon: "linux" },
-            { name: "Segurança da Informação", icon: "lock" },
-            { name: "Redes", icon: "wifi" },
+            { name: "Redes & Hardware", icon: "wifi" },
+            { name: "Maker & Impressão 3D", icon: "cubes" },
           ],
           images: [],
         },
@@ -258,11 +318,12 @@ const pt: ContentTranslation = {
             <>Liderança e metodologias para impulsionar a inovação.</>
           ),
           tags: [
+            { name: "Empreendedorismo", icon: "rocket" },
             { name: "Liderança", icon: "user" },
             { name: "Gestão de Projetos", icon: "chart" },
             { name: "Metodologias Ágeis", icon: "lightning" },
+            { name: "Resolução de Problemas", icon: "puzzle" },
             { name: "Comunicação Efetiva", icon: "chat" },
-            { name: "Inglês", icon: "flag" },
           ],
           images: [],
         },
@@ -373,11 +434,11 @@ const en: ContentTranslation = {
           <strong className="ml-4">Featured</strong>{" "}
           <Line background="brand-alpha-strong" vert height="20" />
           <Text marginRight="4" onBackground="brand-medium">
-            Meet MythMirror
+            Meet RenderUp
           </Text>
         </Row>
       ),
-      href: "/work/mythmirror-startup",
+      href: "/work/renderup",
     },
   },
   about: {
@@ -422,6 +483,28 @@ const en: ContentTranslation = {
       title: "Work Experience",
       experiences: [
         {
+          company: "RenderUp",
+          timeframe: "Mar 2026 - Present",
+          role: "Co-founder & Head of Technology",
+          achievements: [
+            <>
+              Responsible for the entire technological infrastructure and IT
+              governance that supports the operations of the post-production and
+              motion design agency.
+            </>,
+            <>
+              Implemented process automations using Artificial Intelligence and
+              Prompt Engineering, optimizing workflows from onboarding to final
+              rendering.
+            </>,
+            <>
+              Structured agile processes to guarantee scalability, maximum
+              agility, and visual excellence for our clients.
+            </>,
+          ],
+          images: [],
+        },
+        {
           company: "MythMirror",
           timeframe: "Jan 2023 - Present",
           role: "Founder & CEO",
@@ -446,6 +529,28 @@ const en: ContentTranslation = {
         },
         {
           company: "SL Desenv. e Qualidade de Software",
+          timeframe: "Jan 2026 - May 2026",
+          role: "QA Test Automation Intern",
+          achievements: [
+            <>
+              Developed and maintained automated test scripts within the .NET
+              (C#) ecosystem alongside Selenium WebDriver and NUnit for
+              assertions.
+            </>,
+            <>
+              Applied the BDD (Behavior-Driven Development) approach by writing
+              scenarios in Gherkin and executing them via Reqnroll, ensuring
+              perfect alignment between business rules and technical coverage.
+            </>,
+            <>
+              Automated operational routines and optimized the performance and
+              accessibility of the platforms.
+            </>,
+          ],
+          images: [],
+        },
+        {
+          company: "SL Desenv. e Qualidade de Software",
           timeframe: "May 2023 - Dec 2023",
           role: "Junior Full Stack Developer",
           achievements: [
@@ -457,11 +562,6 @@ const en: ContentTranslation = {
               Participation in the architecture of two complete commercial
               applications using React.js and TailwindCSS for modern interfaces,
               alongside performance optimization in Progressive Web Apps (PWAs).
-            </>,
-            <>
-              Recognized for technical leadership, effective communication, and
-              the ability to collaborate on complex projects within an agile
-              environment.
             </>,
           ],
           images: [],
@@ -508,27 +608,45 @@ const en: ContentTranslation = {
           tags: [
             { name: "JavaScript", icon: "javascript" },
             { name: "TypeScript", icon: "typescript" },
+            { name: "C#", icon: "csharp" },
+            { name: "Python", icon: "python" },
+            { name: "Java", icon: "java" },
             { name: "React.js", icon: "react" },
             { name: "Node.js", icon: "nodedotjs" },
             { name: "TailwindCSS", icon: "tailwind" },
-            { name: "REST API", icon: "cloud" },
             { name: "OOP", icon: "code" },
             { name: "System Architecture", icon: "server" },
           ],
           images: [],
         },
         {
-          title: "Data & Infrastructure",
+          title: "Quality & Automation (QA)",
           description: (
-            <>Data management and security to support intelligent decisions.</>
+            <>Ensuring stability through testing and intelligent automation.</>
+          ),
+          tags: [
+            { name: "Cypress", icon: "cypress" },
+            { name: "Selenium WebDriver", icon: "selenium" },
+            { name: "NUnit", icon: "test" },
+            { name: "BDD / Gherkin", icon: "check" },
+            { name: "Artificial Intelligence", icon: "robot" },
+            { name: "Prompt Engineering", icon: "terminal" },
+            { name: "Operational Automation", icon: "gears" },
+          ],
+          images: [],
+        },
+        {
+          title: "Data, Networks & Infrastructure",
+          description: (
+            <>Data and hardware management to support intelligent decisions.</>
           ),
           tags: [
             { name: "MongoDB", icon: "mongodb" },
             { name: "SQL", icon: "database" },
             { name: "Git/GitHub", icon: "githubAlt" },
             { name: "Linux", icon: "linux" },
-            { name: "InfoSec", icon: "lock" },
-            { name: "Networking", icon: "wifi" },
+            { name: "Networking & Hardware", icon: "wifi" },
+            { name: "Maker & 3D Printing", icon: "cubes" },
           ],
           images: [],
         },
@@ -536,11 +654,12 @@ const en: ContentTranslation = {
           title: "Management & Soft Skills",
           description: <>Leadership and methodologies to drive innovation.</>,
           tags: [
+            { name: "Entrepreneurship", icon: "rocket" },
             { name: "Leadership", icon: "user" },
             { name: "Project Management", icon: "chart" },
             { name: "Agile Methodologies", icon: "lightning" },
+            { name: "Problem Solving", icon: "puzzle" },
             { name: "Effective Communication", icon: "chat" },
-            { name: "English", icon: "flag" },
           ],
           images: [],
         },

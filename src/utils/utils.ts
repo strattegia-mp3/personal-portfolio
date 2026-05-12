@@ -23,6 +23,7 @@ export type PostMetadata = {
   tag?: string;
   tag_pt?: string;
   tag_en?: string;
+  draft?: boolean;
   [key: string]: any;
 };
 
@@ -60,7 +61,7 @@ const getMDXData = (dir: string) => {
     const slug = path.basename(file, path.extname(file));
 
     return {
-      metadata: { ...metadata, slug },
+      metadata: { ...metadata, slug } as PostMetadata,
       slug,
       content,
     };
@@ -68,7 +69,7 @@ const getMDXData = (dir: string) => {
 
   return posts.filter(
     (post): post is { metadata: PostMetadata; slug: string; content: string } =>
-      post !== null
+      post !== null && !post.metadata.draft,
   );
 };
 
@@ -76,5 +77,5 @@ export const getPosts = cache(
   (customPath = ["src", "app", "work", "projects"]) => {
     const postsDir = path.join(process.cwd(), ...customPath);
     return getMDXData(postsDir);
-  }
+  },
 );

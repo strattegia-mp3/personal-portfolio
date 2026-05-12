@@ -22,6 +22,7 @@ import {
   RelatedProjectsTitle,
 } from "@/components/i18n/ClientLabels";
 import { TitleManager } from "@/components/i18n/TitleManager";
+import { ProjectLinks } from "@/components/work/ProjectLinks";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "work", "projects"]);
@@ -122,7 +123,9 @@ export default async function Project({
           titlePt={post.metadata.title_pt}
         />
       </Column>
-      <Row marginBottom="32" horizontal="center">
+
+      {/* Margem inferior ajustada para dar espaço aos links */}
+      <Row marginBottom="16" horizontal="center">
         <Row gap="16" vertical="center">
           {post.metadata.team && (
             <AvatarGroup reverse avatars={avatars} size="s" />
@@ -141,6 +144,12 @@ export default async function Project({
           </Text>
         </Row>
       </Row>
+
+      <ProjectLinks
+        link={post.metadata.link}
+        repository={post.metadata.repository}
+      />
+
       {post.metadata.images.length > 0 && (
         <Media
           priority

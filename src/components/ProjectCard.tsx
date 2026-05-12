@@ -2,14 +2,16 @@
 
 import {
   AvatarGroup,
-  Carousel,
   Column,
   Flex,
   Heading,
   SmartLink,
   Text,
 } from "@once-ui-system/core";
+import Image from "next/image";
+import { useState, useRef, useCallback } from "react";
 import { useLanguage } from "@/components/LanguageContext";
+import styles from "./ProjectCard.module.scss";
 
 interface ProjectCardProps {
   href: string;
@@ -24,10 +26,12 @@ interface ProjectCardProps {
   descriptionEn?: string;
   avatars: { src: string }[];
   link: string;
+  repository?: string; /* 👈 ADICIONADO AQUI */
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   href,
+  priority = false,
   images = [],
   title,
   titlePt,
@@ -38,12 +42,28 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   descriptionEn,
   avatars,
   link,
+  repository /* 👈 ADICIONADO AQUI */,
 }) => {
   const { currentLanguage } = useLanguage();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  // Touch handling refs (no re-renders)
+  const touchStartX = useRef(0);
+  const touchDeltaX = useRef(0);
+  const isDragging = useRef(false);
 
+  /* 👈 TRADUÇÕES DO REPOSITÓRIO ADICIONADAS AQUI */
   const labels = {
-    pt: { readCase: "Ler estudo de caso", viewProject: "Visitar projeto" },
-    en: { readCase: "Read case study", viewProject: "View project" },
+    pt: {
+      readCase: "Ler estudo de caso",
+      viewProject: "Visitar projeto",
+      viewRepo: "Repositório",
+    },
+    en: {
+      readCase: "Read case study",
+      viewProject: "View project",
+      viewRepo: "Repository",
+    },
   };
 
   const t = labels[currentLanguage];
@@ -58,15 +78,145 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   if (currentLanguage === "en" && descriptionEn)
     displayDescription = descriptionEn;
 
+  const validImages = images.filter(Boolean);
+  const count = validImages.length;
+
+  const goTo = useCallback(
+    (idx: number) => {
+      const next = (idx + count) % count;
+      setActiveIndex(next);
+    },
+    [count],
+  );
+
+  /* ── Touch / swipe handlers (passive, zero layout thrash) ── */
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchDeltaX.current = 0;
+    isDragging.current = true;
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging.current) return;
+    touchDeltaX.current = e.touches[0].clientX - touchStartX.current;
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const threshold = 40;
+    if (touchDeltaX.current < -threshold) goTo(activeIndex + 1);
+    else if (touchDeltaX.current > threshold) goTo(activeIndex - 1);
+    touchDeltaX.current = 0;
+  }, [activeIndex, goTo]);
+
   return (
     <Column fillWidth gap="m">
-      <Carousel
-        sizes="(max-width: 960px) 100vw, 960px"
-        items={images.map((image) => ({
-          slide: image,
-          alt: displayTitle,
-        }))}
-      />
+      {validImages.length > 0 && (
+        <div className={styles.carousel}>
+          {/* ── Track ── */}
+          <div
+            ref={trackRef}
+            className={styles.track}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {validImages.map((src, idx) => (
+              <div
+                key={src}
+                className={styles.slide}
+                aria-hidden={idx !== activeIndex}
+                style={{
+                  transform: `translateX(${(idx - activeIndex) * 100}%)`,
+                }}
+              >
+                <Image
+                  src={src}
+                  alt={
+                    idx === 0 ? displayTitle : `${displayTitle} — ${idx + 1}`
+                  }
+                  fill
+                  quality={100}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1400px"
+                  priority={priority && idx === 0}
+                  className={styles.image}
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* ── Setas (desktop hover) ── */}
+          {count > 1 && (
+            <>
+              <button
+                className={`${styles.arrow} ${styles.arrowLeft}`}
+                onClick={() => goTo(activeIndex - 1)}
+                aria-label="Imagem anterior"
+                tabIndex={0}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M12.5 15L7.5 10L12.5 5"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <button
+                className={`${styles.arrow} ${styles.arrowRight}`}
+                onClick={() => goTo(activeIndex + 1)}
+                aria-label="Próxima imagem"
+                tabIndex={0}
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M7.5 5L12.5 10L7.5 15"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
+            </>
+          )}
+
+          {/* ── Dots ── */}
+          {count > 1 && (
+            <div className={styles.dots} role="tablist" aria-label="Slides">
+              {validImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  role="tab"
+                  aria-selected={idx === activeIndex}
+                  aria-label={`Slide ${idx + 1}`}
+                  className={`${styles.dot} ${idx === activeIndex ? styles.dotActive : ""}`}
+                  onClick={() => goTo(idx)}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Info ── */}
       <Flex
         s={{ direction: "column" }}
         fillWidth
@@ -82,6 +232,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </Heading>
           </Flex>
         )}
+
         {(avatars?.length > 0 ||
           displayDescription?.trim() ||
           content?.trim()) && (
@@ -117,6 +268,17 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   href={link}
                 >
                   <Text variant="body-default-s">{t.viewProject}</Text>
+                </SmartLink>
+              )}
+
+              {/* 👈 LINK DO REPOSITÓRIO ADICIONADO AQUI */}
+              {repository && (
+                <SmartLink
+                  suffixIcon="github"
+                  style={{ margin: "0", width: "fit-content" }}
+                  href={repository}
+                >
+                  <Text variant="body-default-s">{t.viewRepo}</Text>
                 </SmartLink>
               )}
             </Flex>

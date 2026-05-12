@@ -1,0 +1,131 @@
+---
+title: "RenderUp"
+title_pt: "RenderUp: Empresa de Edição de Vídeo"
+title_en: "RenderUp: Video Editing Company"
+publishedAt: "2026-05-11"
+summary: "Institutional one-page site for a video editing company with bilingual support and dark mode."
+summary_pt: "Site institucional one-page para empresa de edição de vídeo com suporte bilíngue e modo escuro."
+summary_en: "Institutional one-page site for a video editing company with bilingual support and dark mode."
+images:
+  - "/images/projects/renderup/renderup_og.webp"
+  - "/images/projects/renderup/renderup-lp1_og.webp"
+  - "/images/projects/renderup/renderup-lp2_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Lead Developer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://renderupbr.vercel.app/"
+tag: "Frontend"
+tag_pt: "Frontend"
+tag_en: "Frontend"
+---
+
+<Pt>
+  ## O Desafio
+
+A RenderUp precisava de uma presença digital que refletisse sua autoridade em edição de vídeo em escala. O desafio era criar uma *Single Page Application* (SPA) que fosse visualmente impactante, mas extremamente leve e funcional.
+
+Os principais requisitos incluíam:
+- **Conversão:** Captura de leads para a Render Academy e formulários integrados.
+- **Internacionalização:** Alternância de idioma instantânea (PT/EN) para atender clientes globais.
+- **Experiência do Usuário:** Suporte nativo a tema claro/escuro e performance de ponta com Next.js 15.
+</Pt>
+
+<En>
+  ## The Challenge
+
+RenderUp needed a digital presence that reflected its authority in video editing at scale. The challenge was to create a Single Page Application (SPA) that was visually striking yet extremely lightweight and functional.
+
+Key requirements included:
+- **Conversion:** Lead generation for Render Academy and integrated contact forms.
+- **Internationalization:** Instant language switching (PT/EN) to serve global clients.
+- **User Experience:** Native light/dark theme support and top-tier performance using Next.js 15.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Design System"
+    description="O projeto utiliza Tailwind v4 com uma arquitetura de tokens centralizada no CSS, permitindo mudanças globais de marca em segundos."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Design System"
+    description="The project uses Tailwind v4 with a token-based architecture centralized in CSS, allowing for global branding changes in seconds."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework", "Next.js 15 (App Router), React 19"],
+      ["Estilização", "Tailwind CSS v4"],
+      ["Animações", "Framer Motion"],
+      ["Internacionalização", "React Context API"],
+      ["Tema", "Next-Themes (Light/Dark)"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Internacionalização via Contexto
+  
+  Diferente de abordagens tradicionais que mudam a URL ou recarregam a página, implementamos um sistema de tradução instantânea usando a Context API do React. Isso garante que a experiência do usuário seja fluida e sem interrupções.
+</Pt>
+
+<En>
+  ## Technical Highlight: Context-driven I18n
+  
+  Unlike traditional approaches that change the URL or reload the page, we implemented an instant translation system using React's Context API. This ensures a fluid and seamless user experience.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `// Estrutura simplificada do sistema de tradução
+import { createContext, useContext } from 'react';
+import { translations } from '@/lib/translations';
+
+const LangContext = createContext();
+
+export const useLang = () => useContext(LangContext);
+
+export const LangProvider = ({ children, lang }) => {
+  const t = translations[lang];
+  return (
+    <LangContext.Provider value={{ t, lang }}>
+      {children}
+    </LangContext.Provider>
+  );
+};`,
+language: "typescript",
+label: "LangContext.tsx",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O site alcançou pontuações máximas no Lighthouse em termos de acessibilidade e SEO. A transição para o **Tailwind v4** permitiu uma redução significativa no tamanho do bundle final, enquanto o **Framer Motion** garantiu a fluidez necessária para uma empresa criativa.
+
+O maior aprendizado foi a gestão de estados para o "Modal Legal", que suporta navegação por índice e tradução simultânea, melhorando drasticamente a transparência com o usuário.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The site achieved perfect Lighthouse scores for accessibility and SEO. Moving to **Tailwind v4** significantly reduced the final bundle size, while **Framer Motion** provided the professional polish expected from a creative company.
+
+The key takeaway was managing state for the "Legal Modal," which supports index navigation and simultaneous translation, drastically improving user transparency and compliance.
+</En>

@@ -1,0 +1,149 @@
+---
+title: "Padoca Brazilian Bakery"
+title_pt: "Padoca: Vitrine Virtual & Landing Page"
+title_en: "Padoca: Virtual Storefront & Landing Page"
+publishedAt: "2026-05-10"
+summary: "Production-grade Next.js landing page and virtual storefront with seamless client-side i18n."
+summary_pt: "Landing page e vitrine virtual em Next.js com internacionalização client-side fluida."
+summary_en: "Production-grade Next.js landing page and virtual storefront with seamless client-side i18n."
+images:
+  - "/images/projects/padocabay/padocabay_og.webp"
+  - "/images/projects/padocabay/padocabay-lp1_og.webp"
+  - "/images/projects/padocabay/padocabay-lp2_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Lead Developer"
+    avatar: "/images/avatar.jpg"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://padoca.strattegia.dev/"
+tag: "E-commerce"
+tag_pt: "E-commerce"
+tag_en: "E-commerce"
+---
+
+<Pt>
+  ## O Desafio
+
+A Padoca precisava de uma presença digital que funcionasse tanto como um cartão de visitas atrativo quanto como uma vitrine virtual funcional. O público-alvo misturava brasileiros nostálgicos e estrangeiros curiosos, exigindo uma abordagem bilíngue cuidadosa.
+
+Os principais requisitos do projeto foram:
+
+- **Preservação Cultural:** Manter os nomes originais dos produtos brasileiros (ex: Pão de Queijo), independentemente do idioma selecionado.
+- **Experiência de Compra:** Um carrinho de compras _slide-over_ rápido, gerenciando quantidades e totais em tempo real.
+- **Performance:** Uma base técnica moderna capaz de renderizar imagens de alta qualidade com carregamento ultrarrápido usando o Turbopack.
+</Pt>
+
+<En>
+  ## The Challenge
+
+Padoca needed a digital presence that served as both an attractive business card and a functional virtual storefront. The target audience mixed nostalgic Brazilians and curious foreigners, demanding a careful bilingual approach.
+
+Key project requirements included:
+
+- **Cultural Preservation:** Keeping original Brazilian product names (e.g., Pão de Queijo) regardless of the selected language.
+- **Shopping Experience:** A fast slide-over shopping cart managing quantities and totals in real-time.
+- **Performance:** A modern technical foundation capable of rendering high-quality images with ultra-fast loading using Turbopack.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="UX Internacional"
+    description="Quando o site é alternado para o inglês, os nomes dos produtos não são traduzidos. Em vez disso, introduzimos badges de pronúncia fonética para ajudar os clientes estrangeiros a pedirem corretamente."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="International UX"
+    description="When the site switches to English, product names are not translated. Instead, we introduced phonetic pronunciation badges to help foreign customers order correctly."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework", "Next.js 15 (App Router)"],
+      ["Estilização", "Tailwind CSS v4 (globals.css @theme)"],
+      ["Gerenciamento de Estado", "React Context (useReducer)"],
+      ["Linguagem", "TypeScript (Strict Mode)"],
+      ["Deploy", "Vercel"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: i18n sem Mudança de URL e Carrinho Previsível Para
+  garantir trocas de idioma instantâneas sem recarregar a página, centralizamos
+  o estado no `LanguageContext` e criamos um *helper* `t(pt, en)` eficiente.
+  Paralelamente, a lógica do carrinho foi isolada usando `useReducer`,
+  garantindo transições de estado previsíveis (adicionar, remover, alterar
+  quantidade) e derivando totais automaticamente a cada ação.
+</Pt>
+
+<En>
+  ## Technical Highlight: URL-less i18n and Predictable Cart To ensure instant
+  language swaps without page reloads, we centralized state in `LanguageContext`
+  and built an efficient `t(pt, en)` helper. Simultaneously, the cart logic was
+  isolated using `useReducer`, guaranteeing predictable state transitions (add,
+  remove, update quantity) and automatically deriving totals on every action.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `// Exemplo simplificado da integração do helper de tradução no componente
+import { useLanguage } from '@/context/LanguageContext';
+
+export const ProductCard = ({ product }) => {
+  const { t, lang } = useLanguage();
+
+return (
+<div className="card">
+{/* O nome do produto nunca muda */}
+<h3>{product.name}</h3>
+
+      {/* Badge fonético renderizado apenas em inglês */}
+      {lang === 'en' && product.phonetic && (
+        <span className="badge-pronunciation">{product.phonetic}</span>
+      )}
+
+      <p>{t(product.descPt, product.descEn)}</p>
+
+      <button onClick={() => addToCart(product)}>
+        {t('Adicionar ao Carrinho', 'Add to Cart')}
+      </button>
+    </div>
+
+);
+};`,
+language: "tsx",
+label: "ProductCard.tsx",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O ecossistema construído entregou uma experiência de usuário extremamente responsiva e culturalmente inteligente. O uso do **Tailwind v4** apenas com o bloco `@theme` no `globals.css` eliminou a necessidade de arquivos de configuração complexos, mantendo o repositório muito mais limpo.
+
+O maior aprendizado foi o equilíbrio entre o controle de estado global do carrinho usando `useReducer` puro do React em vez de bibliotecas de terceiros, provando que ferramentas nativas são mais do que suficientes para vitrines de pequena/média escala.
+
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The ecosystem delivered an extremely responsive and culturally smart user experience. Using **Tailwind v4** solely with the `@theme` block in `globals.css` eliminated the need for complex configuration files, keeping the repository much cleaner.
+
+The biggest takeaway was balancing global cart state control using pure React `useReducer` instead of third-party libraries, proving that native tools are more than sufficient for small-to-medium scale storefronts.
+
+</En>
