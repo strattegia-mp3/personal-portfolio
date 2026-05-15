@@ -16,7 +16,7 @@ import { routes } from "@/resources";
 import { Mailchimp } from "@/components";
 import { Projects, ProjectData } from "@/components/work/Projects";
 import { Posts, PostData } from "@/components/blog/Posts";
-import { TitleManager } from "@/components/i18n/TitleManager";
+import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
 
 interface HomeViewProps {
   blogPosts: PostData[];
@@ -24,16 +24,16 @@ interface HomeViewProps {
 }
 
 export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
-  const { content } = useLanguage();
+  const { content, currentLanguage } = useLanguage();
   const { home, about, person, blog } = content;
 
   return (
     <Column maxWidth="m" gap="xl" paddingY="12" horizontal="center">
-      <TitleManager
+      <DynamicTabTitle
         titlePt="Victor Rocha | Desenvolvedor de Software"
         titleEn="Victor Rocha | Software Developer"
+        fallback="Victor Rocha"
       />
-
       {/* Hero Section */}
       <Column fillWidth horizontal="center" gap="m">
         <Column maxWidth="s" horizontal="center" align="center">
@@ -72,7 +72,7 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
 
           <RevealFx
             translateY="8"
-            delay={0.2}
+            delay={0.15}
             fillWidth
             horizontal="center"
             paddingBottom="32"
@@ -88,7 +88,7 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
 
           <RevealFx
             paddingTop="12"
-            delay={0.4}
+            delay={0.25}
             horizontal="center"
             paddingLeft="12"
           >
@@ -105,24 +105,20 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
                 {about.avatar.display && (
                   <Avatar
                     marginRight="8"
-                    style={{ marginLeft: "-0.75rem" }}
+                    style={{ marginLeft: "-0.75rem", width: 32, height: 32 }}
                     src={person.avatar}
                     size="m"
                   />
                 )}
-                {about.title}
+                {currentLanguage === "pt" ? "Minha Jornada" : "My Journey"}
               </Row>
             </Button>
           </RevealFx>
         </Column>
       </Column>
 
-      {/* Highlighted Project */}
-      <RevealFx translateY="16" delay={0.6}>
-        <Projects range={[1, 1]} posts={projectPosts} />
-      </RevealFx>
+      <Projects range={[1, 1]} posts={projectPosts} />
 
-      {/* Blog Section */}
       {routes["/blog"] && (
         <Column fillWidth gap="24" marginBottom="s">
           <Row fillWidth paddingRight="64">
@@ -144,10 +140,11 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         </Column>
       )}
 
-      {/* Other Projects */}
-      <Projects range={[2]} posts={projectPosts} />
+      {/* Projetos restantes */}
+      <RevealFx translateY="16" delay={0.1}>
+        <Projects range={[2]} posts={projectPosts} />
+      </RevealFx>
 
-      {/* Newsletter*/}
       <Mailchimp />
     </Column>
   );

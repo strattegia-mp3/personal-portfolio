@@ -4,7 +4,9 @@ import { Column, Heading, Schema, Text } from "@once-ui-system/core";
 import { baseURL } from "@/resources";
 import { useLanguage } from "@/components/LanguageContext";
 import { Posts, PostData } from "@/components/blog/Posts";
-import { TitleManager } from "@/components/i18n/TitleManager";
+import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+
+const OG_IMAGE = "/images/og/about.webp";
 
 interface BlogViewProps {
   posts: PostData[];
@@ -16,9 +18,10 @@ export default function BlogView({ posts }: BlogViewProps) {
 
   return (
     <Column maxWidth="m" paddingTop="24" horizontal="center">
-      <TitleManager
-        titlePt={`Blog | Victor Rocha`}
-        titleEn={`Blog | Victor Rocha`}
+      <DynamicTabTitle 
+        titlePt="Blog | Victor Rocha" 
+        titleEn="Blog | Victor Rocha" 
+        fallback="Victor Rocha" 
       />
       <Schema
         as="webPage"
@@ -26,7 +29,7 @@ export default function BlogView({ posts }: BlogViewProps) {
         path={blog.path}
         title={blog.title}
         description={blog.description}
-        image={`/api/og/generate?title=${encodeURIComponent(blog.title)}`}
+        image={OG_IMAGE}
         author={{
           name: person.name,
           url: `${baseURL}${blog.path}`,

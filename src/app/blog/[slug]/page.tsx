@@ -20,8 +20,14 @@ import React from "react";
 import { Posts } from "@/components/blog/Posts";
 import { ShareSection } from "@/components/blog/ShareSection";
 import { DynamicTitle } from "@/components/mdx/DynamicTitle";
-import { BlogLabel, RecentPostsTitle } from "@/components/i18n/ClientLabels";
-import { TitleManager } from "@/components/i18n/TitleManager";
+import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import {
+  BlogLabel,
+  NoMorePostsMessage,
+  RecentPostsTitle,
+} from "@/components/i18n/ClientLabels";
+
+const OG_FALLBACK = "/images/og/about.webp";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "blog", "posts"]);
@@ -49,8 +55,7 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+    image: post.metadata.image || OG_FALLBACK,
     path: `${blog.path}/${post.slug}`,
   });
 }
@@ -72,12 +77,15 @@ export default async function Blog({
     notFound();
   }
 
-  const titleDefault = post.metadata.title;
-  const titleEn = post.metadata.title_en || titleDefault;
-  const titlePt = post.metadata.title_pt || titleDefault;
-
   return (
     <Row fillWidth>
+      <DynamicTabTitle
+        titlePt={post.metadata.title_pt}
+        titleEn={post.metadata.title_en}
+        fallback={post.metadata.title}
+        suffixPt=" | Blog"
+        suffixEn=" | Blog"
+      />
       <Row maxWidth={12} m={{ hide: true }} />
       <Row fillWidth horizontal="center">
         <Column
@@ -87,10 +95,6 @@ export default async function Blog({
           gap="l"
           paddingTop="24"
         >
-          <TitleManager
-            titlePt={`${titlePt} | Blog`}
-            titleEn={`${titleEn} | Blog`}
-          />
           <Schema
             as="blogPosting"
             baseURL={baseURL}
@@ -99,12 +103,7 @@ export default async function Blog({
             description={post.metadata.summary}
             datePublished={post.metadata.publishedAt}
             dateModified={post.metadata.publishedAt}
-            image={
-              post.metadata.image ||
-              `/api/og/generate?title=${encodeURIComponent(
-                post.metadata.title
-              )}`
-            }
+            image={post.metadata.image || OG_FALLBACK}
             author={{
               name: person.name,
               url: `${baseURL}${about.path}`,
@@ -171,19 +170,26 @@ export default async function Blog({
             url={`${baseURL}${blog.path}/${post.slug}`}
           />
 
-          <Column fillWidth gap="40" horizontal="center" marginTop="40">
-            <Line maxWidth="40" />
+          <Column fillWidth gap="24" horizontal="center">
+            <Line maxWidth="48" />
+
             <RecentPostsTitle />
 
-            <Posts
-              posts={allPosts}
-              exclude={[post.slug]}
-              range={[1, 2]}
-              columns="2"
-              thumbnail
-              direction="column"
-            />
+            {/* Verifica se existem outros posts para exibir */}
+            {allPosts.filter((p) => p.slug !== post.slug).length > 0 ? (
+              <Posts
+                posts={allPosts}
+                exclude={[post.slug]}
+                range={[1, 2]}
+                columns="2"
+                thumbnail
+                direction="column"
+              />
+            ) : (
+              <NoMorePostsMessage />
+            )}
           </Column>
+
           <ScrollToHash />
         </Column>
       </Row>

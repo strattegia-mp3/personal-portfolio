@@ -37,10 +37,9 @@ import {
   FaDiscord,
   FaGithub,
   FaLinkedin,
-  FaX,
+  FaXTwitter,
   FaThreads,
   FaInstagram,
-  FaXTwitter,
   FaFacebook,
   FaPinterest,
   FaWhatsapp,
@@ -48,7 +47,7 @@ import {
   FaTelegram,
   FaGears,
   FaCubes,
-  FaPuzzlePiece
+  FaPuzzlePiece,
 } from "react-icons/fa6";
 
 import {
@@ -89,7 +88,7 @@ export const iconLibrary: Record<string, IconType> = {
   github: FaGithub,
   githubAlt: BiLogoGithub,
   linkedin: FaLinkedin,
-  x: FaX,
+  x: FaXTwitter,
   twitter: FaXTwitter,
   threads: FaThreads,
   arrowUpRightFromSquare: HiArrowTopRightOnSquare,

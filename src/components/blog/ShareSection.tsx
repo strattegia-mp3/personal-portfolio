@@ -1,169 +1,181 @@
 "use client";
 
-import { Row, Text, Button, useToast } from "@once-ui-system/core";
+import { useCallback, useState } from "react";
+import { Row, Text, useToast } from "@once-ui-system/core";
 import { socialSharing } from "@/resources";
 import { useLanguage } from "@/components/LanguageContext";
+import styles from "./ShareSection.module.scss";
+
+// Importando os ícones diretamente do react-icons (conforme seu arquivo icons.ts)
+import {
+  FaXTwitter,
+  FaLinkedin,
+  FaWhatsapp,
+  FaTelegram,
+  FaReddit,
+  FaFacebook,
+} from "react-icons/fa6";
+import { HiEnvelope } from "react-icons/hi2";
+import { BiCopy, BiCheck, BiShareAlt } from "react-icons/bi";
 
 interface ShareSectionProps {
   title: string;
   url: string;
 }
 
-interface SocialPlatform {
-  name: string;
-  icon: string;
-  label: string;
-  generateUrl: (title: string, url: string) => string;
-}
+const enc = encodeURIComponent;
 
-const socialPlatforms: Record<string, SocialPlatform> = {
+/* ─── Platform config ──────────────────────────── */
+const PLATFORMS = {
   x: {
-    name: "x",
-    icon: "x",
-    label: "X",
-    generateUrl: (title, url) =>
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        title
-      )}&url=${encodeURIComponent(url)}`,
+    label: "X / Twitter",
+    icon: FaXTwitter,
+    url: (t: string, u: string) =>
+      `https://twitter.com/intent/tweet?text=${enc(t)}&url=${enc(u)}`,
   },
   linkedin: {
-    name: "linkedin",
-    icon: "linkedin",
     label: "LinkedIn",
-    generateUrl: (title, url) =>
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-        url
-      )}`,
-  },
-  facebook: {
-    name: "facebook",
-    icon: "facebook",
-    label: "Facebook",
-    generateUrl: (title, url) =>
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-  },
-  pinterest: {
-    name: "pinterest",
-    icon: "pinterest",
-    label: "Pinterest",
-    generateUrl: (title, url) =>
-      `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(
-        url
-      )}&description=${encodeURIComponent(title)}`,
+    icon: FaLinkedin,
+    url: (_: string, u: string) =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${enc(u)}`,
   },
   whatsapp: {
-    name: "whatsapp",
-    icon: "whatsapp",
     label: "WhatsApp",
-    generateUrl: (title, url) =>
-      `https://wa.me/?text=${encodeURIComponent(`${title} ${url}`)}`,
-  },
-  reddit: {
-    name: "reddit",
-    icon: "reddit",
-    label: "Reddit",
-    generateUrl: (title, url) =>
-      `https://reddit.com/submit?url=${encodeURIComponent(
-        url
-      )}&title=${encodeURIComponent(title)}`,
+    icon: FaWhatsapp,
+    url: (t: string, u: string) => `https://wa.me/?text=${enc(`${t} - ${u}`)}`,
   },
   telegram: {
-    name: "telegram",
-    icon: "telegram",
     label: "Telegram",
-    generateUrl: (title, url) =>
-      `https://t.me/share/url?url=${encodeURIComponent(
-        url
-      )}&text=${encodeURIComponent(title)}`,
+    icon: FaTelegram,
+    url: (t: string, u: string) =>
+      `https://t.me/share/url?url=${enc(u)}&text=${enc(t)}`,
+  },
+  reddit: {
+    label: "Reddit",
+    icon: FaReddit,
+    url: (t: string, u: string) =>
+      `https://reddit.com/submit?url=${enc(u)}&title=${enc(t)}`,
+  },
+  facebook: {
+    label: "Facebook",
+    icon: FaFacebook,
+    url: (_: string, u: string) =>
+      `https://www.facebook.com/sharer/sharer.php?u=${enc(u)}`,
   },
   email: {
-    name: "email",
-    icon: "email",
     label: "Email",
-    generateUrl: (title, url) =>
-      `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(
-        `Check out this post: ${url}`
-      )}`,
+    icon: HiEnvelope,
+    url: (t: string, u: string) =>
+      `mailto:?subject=${enc(t)}&body=${enc(`Confira este post: ${u}`)}`,
   },
-};
+} as const;
 
+/* ─── Main Component ─────────────────────────────── */
 export function ShareSection({ title, url }: ShareSectionProps) {
   const { addToast } = useToast();
   const { currentLanguage } = useLanguage();
+  const [copied, setCopied] = useState(false);
 
   const i18n = {
     pt: {
-      label: "Compartilhar:",
-      success: "Link copiado!",
-      error: "Erro ao copiar link",
+      label: "Compartilhar",
+      copy: "Copiar link",
+      copied: "Copiado!",
+      nativeShare: "Compartilhar via sistema",
+      error: "Erro ao copiar",
     },
     en: {
-      label: "Share this post:",
-      success: "Link copied to clipboard",
-      error: "Failed to copy link",
+      label: "Share",
+      copy: "Copy link",
+      copied: "Copied!",
+      nativeShare: "Share via system",
+      error: "Failed to copy",
     },
   };
   const t = i18n[currentLanguage];
 
-  // Don't render if sharing is disabled
-  if (!socialSharing.display) {
-    return null;
-  }
+  if (!socialSharing.display) return null;
 
-  const handleCopy = async () => {
+  /* Web Share API — Native OS sheet on mobile */
+  const handleNativeShare = useCallback(async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+      } catch (err) {
+        console.log("Compartilhamento cancelado ou não suportado.");
+      }
+    } else {
+      addToast({ variant: "danger", message: t.error });
+    }
+  }, [title, url, t, addToast]);
+
+  const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(url);
-      addToast({
-        variant: "success",
-        message: t.success,
-      });
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-      addToast({
-        variant: "danger",
-        message: t.error,
-      });
+      setCopied(true);
+      addToast({ variant: "success", message: t.copied });
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      addToast({ variant: "danger", message: t.error });
     }
-  };
+  }, [url, t, addToast]);
 
-  // Get enabled platforms
-  const enabledPlatforms = Object.entries(socialSharing.platforms)
-    .filter(([key, enabled]) => enabled && key !== "copyLink")
-    .map(([platformKey]) => {
-      const platform = socialPlatforms[platformKey];
-      return platform ? { key: platformKey, ...platform } : null;
-    })
-    .filter((p): p is SocialPlatform & { key: string } => p !== null);
+  const enabledKeys = Object.entries(socialSharing.platforms)
+    .filter(([k, v]) => v && k !== "copyLink" && k in PLATFORMS)
+    .map(([k]) => k as keyof typeof PLATFORMS);
 
   return (
-    <Row fillWidth center gap="16" marginTop="32" marginBottom="16">
-      <Text variant="label-default-m" onBackground="neutral-weak">
+    <div className={styles.wrapper}>
+      <Text
+        variant="label-default-s"
+        onBackground="neutral-weak"
+        className={styles.label}
+      >
         {t.label}
       </Text>
-      <Row data-border="rounded" gap="16" horizontal="center" wrap>
-        {enabledPlatforms.map((platform, index) => (
-          <Button
-            key={index}
-            variant="secondary"
-            size="s"
-            href={platform.generateUrl(title, url)}
-            prefixIcon={platform.icon}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={`Share on ${platform.label}`}
-          />
-        ))}
 
+      <div className={styles.buttons}>
+        {/* Botões das Redes Sociais */}
+        {enabledKeys.map((key) => {
+          const p = PLATFORMS[key];
+          const Icon = p.icon;
+          return (
+            <a
+              key={key}
+              href={p.url(title, url)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.btn}
+              aria-label={`Compartilhar no ${p.label}`}
+              title={p.label}
+            >
+              <Icon size={20} />
+            </a>
+          );
+        })}
+
+        {/* Copiar Link */}
         {socialSharing.platforms.copyLink && (
-          <Button
-            variant="secondary"
-            size="s"
+          <button
+            className={`${styles.btn} ${copied ? styles.btnCopied : ""}`}
             onClick={handleCopy}
-            prefixIcon="openLink"
-            aria-label="Copy Link"
-          />
+            aria-label={copied ? t.copied : t.copy}
+            title={copied ? t.copied : t.copy}
+          >
+            {copied ? <BiCheck size={22} /> : <BiCopy size={20} />}
+          </button>
         )}
-      </Row>
-    </Row>
+
+        {/* Compartilhamento Nativo (Mobile) */}
+        <button
+          className={`${styles.btn} ${styles.btnNative}`}
+          onClick={handleNativeShare}
+          aria-label={t.nativeShare}
+          title={t.nativeShare}
+        >
+          <BiShareAlt size={20} />
+        </button>
+      </div>
+    </div>
   );
 }

@@ -7,6 +7,8 @@
   <a href="https://opensource.org/licenses/CC-BY-NC-4.0"><img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-7f5af0?style=for-the-badge" alt="License: CC BY-NC 4.0" /></a>
 </p>
 
+![Portfolio Banner](public/images/og/about.webp)
+
 **Uma vitrine digital de alta performance.**
 
 > Soluções digitais com estética minimalista, arquitetura robusta e foco na experiência do usuário.
@@ -15,28 +17,26 @@
 
 ## ⚡ Sobre o Projeto
 
-Este repositório hospeda o ecossistema pessoal de **Victor Rocha**.  
-Mais do que um simples portfólio, é uma aplicação **Next.js 14 (App Router)** completa, projetada para demonstrar domínio em **arquitetura de software**, **otimização de performance (Core Web Vitals)** e **design de interface**.
+Este repositório hospeda o ecossistema digital pessoal de Victor Rocha.  
+Mais do que um simples portfólio, é uma aplicação Next.js 14 (App Router) moderna, projetada para demonstrar domínio em arquitetura de software frontend, otimização de performance (Core Web Vitals) e design de interface (UI/UX).
 
-O projeto foi construído sobre o **design system Once UI**, mas fortemente customizado com funcionalidades exclusivas de backend e otimizações de renderização.
-
----
+O projeto utiliza o sistema de design Once UI como base, mas foi profundamente refatorado com funcionalidades exclusivas, animações aceleradas por hardware e uma estratégia agressiva de entrega de conteúdo estático.
 
 ## 🛠 Tech Stack & Arquitetura
 
 ### Core
 
-- **Framework:** Next.js 14 (App Router / Server Components)
+- **Framework:** Next.js 16 (App Router / Server Components)
 - **Linguagem:** TypeScript
 - **Estilização:** Once UI (SCSS Modules / CSS Variables) & Classnames
 - **Content:** MDX (com componentes customizados via next-mdx-remote)
 
-### Features Exclusivas
+### Engenharia de Performance & SEO
 
-- **Server-Side OG Generator:** Painel administrativo interno (`/admin/generator`) para criar capas de projetos em tempo real usando **Satori** e **Edge Functions**.
-- **Internacionalização (i18n):** Sistema customizado de contexto (PT/EN) sem overhead de bibliotecas pesadas.
-- **Newsletter:** Integração via API Route própria com **Mailchimp** (Double Opt-in & Tagging).
-- **Easter Egg:** Implementação do **Konami Code** (`↑↑↓↓←→←→BA`) com carregamento preguiçoso (Lazy Loading) para não impactar o TBT.
+- **Web Vitals Otimizados:** Resolução cirúrgica de problemas de LCP (Largest Contentful Paint), INP (Interaction to Next Paint) e CLS (Cumulative Layout Shift).
+- **Delivery de Imagens:** Bypass da otimização do Node.js em favor da entrega instantânea via CDN Edge em formatos modernos (.webp / .avif).
+- **Animações Fluidas:** Transições de Galeria e Lightbox refatoradas usando curvas de Bézier (cubic-bezier) e renderização via GPU (translate3d/scale3d).
+- **SEO & Metadados Avançados:** JSON-LD Schemas dinâmicos, sitemap.ts com prioridades hierárquicas e robots.ts otimizado.
 
 ### Infra & Analytics
 
@@ -52,23 +52,23 @@ Siga os passos abaixo para clonar e executar o projeto na sua máquina.
 
 ### 1. Clone o repositório
 
-```
+```bash
 git clone https://github.com/strattegia-mp3/personal-portfolio.git
 cd personal-portfolio
 ```
 
 ### 2. Instale as dependências
 
-```
+```bash
 npm install
 ```
 
 ### 3. Configuração de Variáveis de Ambiente
 
-Renomeie o arquivo `.env.example` para `.env.local` e preencha as chaves:
+Renomeie o arquivo `.env.example` para `.env.local` e preencha as chaves essenciais:
 
-```
-# URL Base (Crucial para OG Images e SEO)
+```env
+# URL Base (Crucial para Metadados e Compartilhamento Social)
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"
 
 # Integração Mailchimp (Newsletter)
@@ -79,7 +79,7 @@ MAILCHIMP_AUDIENCE_ID="seu_audience_id"
 
 ### 4. Execute o servidor de desenvolvimento
 
-```
+```bash
 npm run dev
 ```
 
@@ -89,50 +89,50 @@ Acesse [http://localhost:3000](http://localhost:3000).
 
 ## 📂 Estrutura do Projeto
 
-```
+```plaintext
 src/
 ├── app/
-│   ├── admin/        # Gerador de OG Images (Edge Runtime)
-│   ├── api/          # Rotas API (Subscribe, OG Generate, Auth)
-│   ├── blog/         # Páginas do Blog
-│   ├── work/         # Páginas de Projetos
-│   └── layout.tsx    # Root Layout (Server Component)
+│   ├── api/            # Serverless Functions (ex: Inscrição Newsletter)
+│   ├── blog/           # Listagem e páginas dinâmicas do Blog
+│   ├── work/           # Portfólio de Projetos e Casos de Estudo
+│   ├── gallery/        # Masonry Grid responsivo com Lightbox
+│   └── layout.tsx      # Root Layout (Configurações de Fontes, Temas e Metadata)
 ├── components/
-│   ├── mdx/          # Mapeamento de componentes Markdown
-│   ├── gallery/      # Visualização de Grid/Masonry
-│   └── ...           # Componentes de UI modulares
-├── resources/        # Conteúdo estático e configurações (i18n)
-└── views/            # Client Components para páginas principais
+│   ├── i18n/           # Componentes híbridos de internacionalização
+│   ├── mdx/            # Renderizadores e tipografia customizada para Markdown
+│   └── konamiCode/     # Easter Egg componentizado (Lazy loaded)
+├── resources/          # Dicionários de tradução e configurações do site
+└── views/              # Client Components agregadores para as páginas principais
 ```
 
 ---
 
 ## ✨ Funcionalidades em Destaque
 
-### 🎨 OG Image Generator (Admin)
+### 🌍 Arquitetura Híbrida de i18n (SEO + UX)
 
-Uma ferramenta interna acessível em `/admin/generator`.  
-Permite customizar títulos, cargos e imagens de fundo para gerar **PNG de alta qualidade on-the-fly** para compartilhamento social.  
-Utiliza **@vercel/og**.
+Um sistema de internacionalização (PT/EN) construído do zero, sem o overhead de bibliotecas pesadas.
 
----
+- **No Servidor (SEO):** A API `generateMetadata` renderiza os títulos e descrições originais em HTML puro para indexação perfeita pelo Googlebot.
+- **No Cliente (UX):** O componente customizado `DynamicTabTitle` intercepta o estado do idioma e altera a aba do navegador instantaneamente para o usuário, garantindo uma navegação reativa e fluida.
 
-### 🌍 Sistema de i18n Híbrido
+### 📝 Blog & Projetos com MDX Power
 
-Utiliza uma abordagem híbrida onde o conteúdo estático reside em `src/resources/content-i18n.tsx`.
+Os posts do blog e estudos de caso suportam componentes interativos imersos no Markdown, incluindo:
 
-- **SEO:** Metadata gerado no servidor.
-- **UX:** `TitleManager` atualiza o título da aba no cliente instantaneamente ao trocar o idioma.
+- `<CodeBlock />` com syntax highlighting nativo.
+- Renderização condicional por idioma (`<Pt>` e `<En>`) em um único arquivo `.mdx`.
+- `<ShareSection />` integrado com a Web Share API nativa (iOS/Android).
 
----
+### 🕹️ Konami Code (Arcade Easter Egg)
 
-### 📝 Blog com MDX Power
+Pressione **↑ ↑ ↓ ↓ ← → ← → B A** para invocar um *System Override*.
 
-Os posts do blog suportam **componentes React interativos dentro do Markdown**, como:
+Um modal construído com **Framer Motion** e **canvas-confetti** que força uma paleta de cores Cyberpunk/Neon, garantindo visibilidade perfeita independentemente do tema do sistema (Dark/Light). Carregado via **Lazy Loading** (`next/dynamic`) para impacto zero no tempo de carregamento da página (**TBT**).
 
-- `<CodeBlock />` com syntax highlighting.
-- `<Feedback />` para callouts.
-- `<Pt>` e `<En>` para renderização condicional de idioma dentro do mesmo arquivo.
+### 📬 Newsletter (Zero-Backend)
+
+Integração direta de formulários com a API do **Mailchimp** (via Server/API Routes do Next.js). Implementa validação segura e estratégia de **Double Opt-in** para compliance com a **LGPD/GDPR**.
 
 ---
 
@@ -143,4 +143,6 @@ Este projeto utiliza como base o template **Magic Portfolio** da **Once UI**, di
 - **Design System:** Once UI
 - **Desenvolvimento & Customizações:** Victor Rocha
 
-Desenvolvido com 💜 e TypeScript por **Victor Rocha**.
+<div align="center">
+  <p><code>~ $ "Desenvolvido com 💜 e TypeScript por Victor Rocha."</code></p>
+</div>

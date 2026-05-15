@@ -5,8 +5,11 @@ export default function robots() {
     rules: [
       {
         userAgent: "*",
+        allow: "/",
+        disallow: ["/admin/", "/api/"],
       },
     ],
     sitemap: `${baseURL}/sitemap.xml`,
+    host: baseURL,
   };
 }

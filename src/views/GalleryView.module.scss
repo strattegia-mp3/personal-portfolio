@@ -1,0 +1,255 @@
+/* Curvas de animação reutilizáveis para consistência */
+:root {
+  --ease-fluid: cubic-bezier(
+    0.16,
+    1,
+    0.3,
+    1
+  );
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Masonry-style grid with CSS columns */
+.grid {
+  columns: 3;
+  column-gap: 0.75rem;
+  width: 100%;
+  padding: 0;
+
+  @media (max-width: 1024px) {
+    columns: 2;
+  }
+  @media (max-width: 560px) {
+    columns: 1;
+  }
+}
+
+/* ── Each item ── */
+.item {
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
+  border-radius: var(--radius-l, 16px);
+  overflow: hidden;
+  cursor: zoom-in;
+  position: relative;
+
+  /* Fade-in inicial usando translate3d para GPU acceleration */
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scale3d(0.96, 0.96, 1);
+  will-change: transform, opacity;
+
+  /* stagger via CSS custom property --i */
+  transition:
+    opacity 0.6s var(--ease-fluid) calc(var(--i, 0) * 0.05s),
+    transform 0.8s var(--ease-spring) calc(var(--i, 0) * 0.05s),
+    box-shadow 0.3s var(--ease-fluid);
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-solid-strong);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Trigger the animation once image is loaded */
+.itemLoaded {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+}
+
+/* ── Image wrapper with fixed aspect-ratio (prevents CLS) ── */
+.itemInner {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: var(--neutral-alpha-weak);
+}
+
+/* ── The image itself ── */
+.itemImage {
+  object-fit: cover;
+  object-position: center;
+  /* Transição do hover mais longa e fluida */
+  transition: transform 0.7s var(--ease-fluid);
+  will-change: transform;
+
+  .item:hover & {
+    /* Scale3d evita recálculo de pixels na CPU */
+    transform: scale3d(1.04, 1.04, 1);
+  }
+}
+
+/* ── Hover overlay — expand icon ── */
+.itemOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  transition: background 0.4s var(--ease-fluid);
+  border-radius: inherit;
+
+  .item:hover & {
+    background: rgba(0, 0, 0, 0.24); /* Levemente mais sutil */
+  }
+}
+
+.itemIcon {
+  color: white;
+  opacity: 0;
+  transform: scale3d(0.7, 0.7, 1);
+  transition:
+    opacity 0.4s var(--ease-fluid),
+    transform 0.4s var(--ease-spring);
+
+  .item:hover & {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+
+  @media (hover: none) {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   LIGHTBOX
+   ═══════════════════════════════════════════════════ */
+
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85); /* Fundo um pouco mais translúcido */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Animação rápida de fundo */
+  animation: lbFadeIn 0.3s var(--ease-fluid) forwards;
+  will-change: opacity;
+}
+
+@keyframes lbFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.lightboxContent {
+  position: relative;
+  width: min(90vw, 1200px);
+  height: min(85vh, 900px);
+  border-radius: var(--radius-l, 16px);
+  overflow: hidden;
+  transform-origin: center;
+
+  /* Abertura fluida flutuando de baixo para cima */
+  animation: lbZoomIn 0.5s var(--ease-fluid) forwards;
+  will-change: transform, opacity;
+}
+
+@keyframes lbZoomIn {
+  from {
+    transform: scale3d(0.85, 0.85, 1) translate3d(0, 20px, 0);
+    opacity: 0;
+  }
+  to {
+    transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.lightboxImage {
+  object-fit: contain !important;
+  object-position: center;
+}
+
+/* ── Navigation arrows & Close Button (Estilos compartilhados) ── */
+.lightboxNav,
+.lightboxClose {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(
+    255,
+    255,
+    255,
+    0.05
+  ); /* Glassmorphism */
+  color: white;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+
+  /* Transições ágeis para os botões */
+  transition:
+    background 0.3s var(--ease-fluid),
+    border-color 0.3s var(--ease-fluid),
+    transform 0.3s var(--ease-spring);
+
+  will-change: transform;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: scale3d(1.1, 1.1, 1);
+  }
+
+  &:active {
+    transform: scale3d(0.95, 0.95, 1); /* Feedback tátil ao clicar */
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-solid-strong);
+    outline-offset: 2px;
+  }
+}
+
+/* Tamanhos específicos */
+.lightboxNav {
+  top: 50%;
+  margin-top: -1.5rem;
+  width: 3rem;
+  height: 3rem;
+
+  @media (max-width: 560px) {
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-top: -1.125rem;
+  }
+}
+
+.lightboxClose {
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  @media (max-width: 560px) {
+    top: 1rem;
+    right: 1rem;
+  }
+}
+
+.lightboxPrev {
+  left: 1.5rem;
+}
+.lightboxNext {
+  right: 1.5rem;
+}

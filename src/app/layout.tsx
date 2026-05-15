@@ -14,8 +14,19 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
 import { LanguageProvider } from "@/components/LanguageContext";
-import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
+import {
+  baseURL,
+  effects,
+  person,
+  fonts,
+  style,
+  dataStyle,
+  home,
+} from "@/resources";
 import KonamiWrapper from "@/components/konamiCode/KonamiWrapper";
+import { Viewport } from "next";
+
+const OG_IMAGE = "/images/og/about.webp";
 
 const themeScript = `
   (function() {
@@ -57,14 +68,37 @@ const themeScript = `
   })();
 `;
 
+// Movendo o theme-color para o objeto Viewport nativo do Next.js
+export const viewport: Viewport = {
+  themeColor: "#7c3aed",
+};
+
 export async function generateMetadata() {
-  return Meta.generate({
-    title: home.title,
+  const baseMeta = Meta.generate({
+    title: home.seoTitle,
     description: home.description,
     baseURL: baseURL,
     path: home.path,
-    image: home.image,
+    image: OG_IMAGE,
   });
+
+  // Estendendo os metadados gerados pelo OnceUI com os seus ícones e manifest
+  return {
+    ...baseMeta,
+    manifest: "/site.webmanifest",
+    icons: {
+      icon: [
+        { url: "/favicon.ico" }, // Fallback para navegadores muito antigos
+        { url: "/images/icons/favicon.svg", type: "image/svg+xml" }, // Melhor para navegadores modernos
+        {
+          url: "/images/icons/favicon-96x96.png",
+          sizes: "96x96",
+          type: "image/png",
+        },
+      ],
+      apple: [{ url: "/images/icons/apple-touch-icon.png", sizes: "180x180" }],
+    },
+  };
 }
 
 export default async function RootLayout({
@@ -74,16 +108,35 @@ export default async function RootLayout({
     <Flex
       suppressHydrationWarning
       as="html"
-      lang="en"
+      lang="pt-BR"
       fillWidth
       className={classNames(
         fonts.heading.variable,
         fonts.body.variable,
         fonts.label.variable,
-        fonts.code.variable
+        fonts.code.variable,
       )}
     >
       <head>
+        {/* Preconnects for faster font loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+
+        {/* OG image preload for crawlers */}
+        <link rel="preload" href={OG_IMAGE} as="image" type="image/webp" />
+
+        <link
+          rel="preload"
+          href={person.avatar}
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: themeScript }}

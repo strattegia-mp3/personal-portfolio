@@ -17,12 +17,14 @@ import { ScrollToHash, CustomMDX } from "@/components";
 import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 import { DynamicTitle } from "@/components/mdx/DynamicTitle";
+import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
 import {
   ProjectsLabel,
   RelatedProjectsTitle,
 } from "@/components/i18n/ClientLabels";
-import { TitleManager } from "@/components/i18n/TitleManager";
 import { ProjectLinks } from "@/components/work/ProjectLinks";
+
+const OG_FALLBACK = "/images/og/about.webp";
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const posts = getPosts(["src", "app", "work", "projects"]);
@@ -50,8 +52,7 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image:
-      post.metadata.image || `/api/og/generate?title=${post.metadata.title}`,
+    image: post.metadata.images?.[0] || OG_FALLBACK,
     path: `${work.path}/${post.slug}`,
   });
 }
@@ -78,15 +79,14 @@ export default async function Project({
       src: person.avatar,
     })) || [];
 
-  const titleDefault = post.metadata.title;
-  const titleEn = post.metadata.title_en || titleDefault;
-  const titlePt = post.metadata.title_pt || titleDefault;
-
   return (
     <Column as="section" maxWidth="m" horizontal="center" gap="l">
-      <TitleManager
-        titlePt={`${titlePt} | Projetos`}
-        titleEn={`${titleEn} | Projects`}
+      <DynamicTabTitle
+        titlePt={post.metadata.title_pt}
+        titleEn={post.metadata.title_en}
+        fallback={post.metadata.title}
+        suffixPt=" | Projetos"
+        suffixEn=" | Work"
       />
       <Schema
         as="blogPosting"
@@ -96,10 +96,7 @@ export default async function Project({
         description={post.metadata.summary}
         datePublished={post.metadata.publishedAt}
         dateModified={post.metadata.publishedAt}
-        image={
-          post.metadata.image ||
-          `/api/og/generate?title=${encodeURIComponent(post.metadata.title)}`
-        }
+        image={post.metadata.images?.[0] || OG_FALLBACK}
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
@@ -124,7 +121,6 @@ export default async function Project({
         />
       </Column>
 
-      {/* Margem inferior ajustada para dar espaço aos links */}
       <Row marginBottom="16" horizontal="center">
         <Row gap="16" vertical="center">
           {post.metadata.team && (

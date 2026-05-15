@@ -19,14 +19,14 @@ import { baseURL } from "@/resources";
 import { useLanguage } from "@/components/LanguageContext";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
-import { TitleManager } from "@/components/i18n/TitleManager";
+import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+
+const OG_IMAGE = "/images/og/about.webp";
 
 export default function AboutView() {
-  // 1. Obtemos os dados traduzidos do contexto
   const { content } = useLanguage();
   const { person, about, social } = content;
 
-  // 2. A estrutura do índice (TOC) é montada com base no idioma atual
   const structure = [
     {
       title: about.intro.title,
@@ -52,9 +52,10 @@ export default function AboutView() {
 
   return (
     <Column maxWidth="m">
-      <TitleManager
-        titlePt={`Sobre | Victor Rocha`}
-        titleEn={`About | Victor Rocha`}
+      <DynamicTabTitle
+        titlePt="Sobre | Victor Rocha"
+        titleEn="About | Victor Rocha"
+        fallback="Victor Rocha"
       />
       <Schema
         as="webPage"
@@ -62,7 +63,7 @@ export default function AboutView() {
         title={about.title}
         description={about.description}
         path={about.path}
-        image={`/api/og/generate?title=${encodeURIComponent(about.title)}`}
+        image={OG_IMAGE}
         author={{
           name: person.name,
           url: `${baseURL}${about.path}`,
@@ -70,18 +71,9 @@ export default function AboutView() {
         }}
       />
 
-      {about.tableOfContent.display && (
-        <Column
-          left="0"
-          style={{ top: "50%", transform: "translateY(-50%)" }}
-          position="fixed"
-          paddingLeft="24"
-          gap="32"
-          s={{ hide: true }}
-        >
-          <TableOfContents structure={structure} about={about} />
-        </Column>
-      )}
+      <Column s={{ hide: true }}>
+        <TableOfContents structure={structure} about={about} />
+      </Column>
 
       <Row fillWidth s={{ direction: "column" }} horizontal="center">
         {about.avatar.display && (
@@ -203,7 +195,7 @@ export default function AboutView() {
                             />
                           </Row>
                         </React.Fragment>
-                      )
+                      ),
                   )}
               </Row>
             )}
@@ -269,7 +261,7 @@ export default function AboutView() {
                           >
                             {achievement}
                           </Text>
-                        )
+                        ),
                       )}
                     </Column>
                     {experience.images && experience.images.length > 0 && (
@@ -349,7 +341,7 @@ export default function AboutView() {
               </Heading>
               <Column fillWidth gap="l">
                 {about.technical.skills.map((skill, index) => (
-                  <Column key={`${skill}-${index}`} fillWidth gap="4">
+                  <Column key={`${skill.title}-${index}`} fillWidth gap="4">
                     <Text id={skill.title} variant="heading-strong-l">
                       {skill.title}
                     </Text>

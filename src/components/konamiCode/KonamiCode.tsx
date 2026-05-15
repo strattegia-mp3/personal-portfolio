@@ -11,7 +11,7 @@ import {
   opacity,
   SpacingToken,
 } from "@once-ui-system/core";
-import { X, Trophy, Gamepad2 } from "lucide-react";
+import { Trophy, Gamepad2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { effects } from "@/resources";
 import { motion, AnimatePresence } from "framer-motion";
@@ -86,10 +86,10 @@ export const KonamiCode = () => {
     setIsOpen(true);
     if (typeof confetti === "function") {
       confetti({
-        particleCount: 150,
-        spread: 70,
+        particleCount: 250,
+        spread: 100,
         origin: { y: 0.6 },
-        colors: ["#7C3AED", "#ffffff", "#000000"],
+        colors: ["#8B5CF6", "#FFD700", "#00E5FF", "#10B981", "#FF007F"],
         zIndex: 10005,
       });
     }
@@ -99,6 +99,8 @@ export const KonamiCode = () => {
     setIsOpen(false);
   };
 
+  const fluidEase: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -107,7 +109,7 @@ export const KonamiCode = () => {
           initial={{ opacity: 0, backdropFilter: "blur(0px)" }}
           animate={{ opacity: 1, backdropFilter: "blur(12px)" }}
           exit={{ opacity: 0, backdropFilter: "blur(0px)" }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.5, ease: fluidEase }}
           style={{
             position: "fixed",
             top: 0,
@@ -115,7 +117,9 @@ export const KonamiCode = () => {
             width: "100vw",
             height: "100vh",
             zIndex: 10000,
-            backgroundColor: "rgba(0, 0, 0, 0.85)",
+            // Overlay mais forte
+            background:
+              "radial-gradient(circle at center, rgba(40,10,80,0.85) 0%, rgba(5,0,15,0.98) 100%)",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -171,16 +175,15 @@ export const KonamiCode = () => {
             />
           </div>
 
-          {/* Animated Wrapper for Modal/Card */}
           <motion.div
             key="konami-modal"
-            initial={{ opacity: 0, scale: 0.9, y: 30 }}
+            initial={{ opacity: 0, scale: 0.85, y: 40 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{
               type: "spring",
-              damping: 25,
-              stiffness: 350,
+              damping: 20,
+              stiffness: 300,
               mass: 1,
               delay: 0.1,
             }}
@@ -197,50 +200,97 @@ export const KonamiCode = () => {
               direction="column"
               align="center"
               padding="xl"
-              border="brand-medium"
               radius="l"
-              background="surface"
               gap="l"
               style={{
                 maxWidth: "500px",
                 width: "90%",
                 textAlign: "center",
+                backgroundColor: "#0D0415",
+                border: "2px solid #8B5CF6",
                 boxShadow:
-                  "0 0 120px rgba(124, 58, 237, 0.4), 0 0 30px rgba(124, 58, 237, 0.2)",
+                  "0 0 80px rgba(139, 92, 246, 0.5), 0 0 30px rgba(255, 215, 0, 0.2), inset 0 0 40px rgba(139, 92, 246, 0.3)",
                 pointerEvents: "auto",
               }}
             >
               <Flex
                 padding="m"
                 radius="full"
-                background="brand-alpha-medium"
-                style={{ marginBottom: "-1rem" }}
+                style={{
+                  marginBottom: "-1rem",
+                  background:
+                    "linear-gradient(135deg, rgba(139,92,246,0.6) 0%, rgba(255,215,0,0.3) 100%)",
+                  border: "2px solid rgba(255, 215, 0, 0.6)",
+                  boxShadow: "0 0 30px rgba(255, 215, 0, 0.4)",
+                }}
               >
-                <Trophy size={48} className="text-white" />
+                <Trophy
+                  size={56}
+                  color="#FFD700"
+                  style={{
+                    filter: "drop-shadow(0 0 10px rgba(255, 215, 0, 0.8))",
+                  }}
+                />
               </Flex>
 
               <Heading variant="display-strong-s">
-                {t.titlePrefix} <br />{" "}
-                <span style={{ color: "var(--brand-solid-strong)" }}>
+                <span
+                  style={{
+                    color: "#FFFFFF",
+                    textShadow: "0 0 10px rgba(255,255,255,0.3)",
+                  }}
+                >
+                  {t.titlePrefix}
+                </span>{" "}
+                <br />
+                <span
+                  style={{
+                    color: "#FFD700",
+                    textShadow:
+                      "0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(255, 215, 0, 0.3)",
+                    letterSpacing: "2px",
+                  }}
+                >
                   {t.titleSuffix}
                 </span>
               </Heading>
 
-              <Text variant="body-default-l" onBackground="neutral-medium">
+              <Text
+                variant="body-default-l"
+                style={{ color: "#E5E7EB", fontWeight: 500 }}
+              >
                 {t.description}
               </Text>
 
               <Flex
                 padding="s"
-                border="neutral-medium"
                 radius="m"
-                background="neutral-alpha-weak"
-                gap="8"
+                gap="12"
                 align="center"
                 horizontal="center"
+                style={{
+                  background: "#05010A",
+                  border: "1px solid #8B5CF6",
+                  boxShadow:
+                    "inset 0 0 15px rgba(139, 92, 246, 0.4), 0 0 15px rgba(139, 92, 246, 0.2)",
+                  marginTop: "8px",
+                  marginBottom: "8px",
+                }}
               >
-                <Gamepad2 size={20} />
-                <Text variant="code-default-s">↑ ↑ ↓ ↓ ← → ← → B A</Text>
+                <Gamepad2
+                  size={24}
+                  color="#00E5FF"
+                  style={{ filter: "drop-shadow(0 0 5px rgba(0,229,255,0.6))" }}
+                />
+                <Text
+                  variant="code-default-m"
+                  style={{
+                    color: "#00E5FF",
+                    textShadow: "0 0 10px rgba(0, 229, 255, 0.8)",
+                  }}
+                >
+                  ↑ ↑ ↓ ↓ ← → ← → B A
+                </Text>
               </Flex>
 
               <Button

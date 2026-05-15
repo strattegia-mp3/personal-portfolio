@@ -9,9 +9,15 @@ interface PostProps {
   post: PostData;
   thumbnail: boolean;
   direction?: "row" | "column";
+  priority?: boolean;
 }
 
-export default function Post({ post, thumbnail, direction }: PostProps) {
+export default function Post({
+  post,
+  thumbnail,
+  direction,
+  priority = false,
+}: PostProps) {
   const { content, currentLanguage } = useLanguage();
   const { person } = content;
 
@@ -45,8 +51,8 @@ export default function Post({ post, thumbnail, direction }: PostProps) {
     >
       {post.metadata.image && thumbnail && (
         <Media
-          priority
-          sizes="(max-width: 768px) 100vw, 640px"
+          priority={priority}
+          sizes="(max-width: 560px) 100vw, (max-width: 1024px) 50vw, 640px"
           border="neutral-alpha-weak"
           cursor="interactive"
           radius="l"
@@ -65,7 +71,11 @@ export default function Post({ post, thumbnail, direction }: PostProps) {
         >
           <Row gap="24" vertical="center">
             <Row vertical="center" gap="16">
-              <Avatar src={person.avatar} size="s" />
+              <Avatar
+                src={person.avatar}
+                size="s"
+                style={{ width: 32, height: 32, flexShrink: 0 }}
+              />
               <Text variant="label-default-s">{person.name}</Text>
             </Row>
             <Text variant="body-default-xs" onBackground="neutral-weak">

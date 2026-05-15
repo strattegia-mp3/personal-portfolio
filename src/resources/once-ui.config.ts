@@ -30,13 +30,10 @@ const routes: RoutesConfig = {
   "/work": true,
   "/blog": true,
   "/gallery": true,
-  "/admin/generator": true,
 };
 
 // 3. Protected Routes
-const protectedRoutes: ProtectedRoutesConfig = {
-  "/admin/generator": true,
-};
+const protectedRoutes: ProtectedRoutesConfig = {};
 
 const display: DisplayConfig = {
   location: true,
@@ -51,24 +48,28 @@ const heading = Geist({
   variable: "--font-heading",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 const body = Geist({
   variable: "--font-body",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600"],
 });
 
 const label = Geist({
   variable: "--font-label",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500"],
 });
 
 const code = Geist_Mono({
   variable: "--font-code",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400"],
 });
 
 const fonts: FontsConfig = {

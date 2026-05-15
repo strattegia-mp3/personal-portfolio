@@ -1,15 +1,15 @@
 import { getPosts } from "@/utils/utils";
-import { baseURL, blog, home } from "@/resources";
+import { baseURL, blog } from "@/resources";
 import { Meta } from "@once-ui-system/core";
 import BlogView from "@/views/BlogView";
 
 export async function generateMetadata() {
   return Meta.generate({
-    title: blog.title,
+    title: blog.seoTitle,
     description: blog.description,
     baseURL: baseURL,
     path: blog.path,
-    image: home.image,
+    image: "/images/og/about.webp",
   });
 }
 

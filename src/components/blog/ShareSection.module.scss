@@ -1,0 +1,77 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--neutral-alpha-weak);
+}
+
+.label {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.7rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+/* ── Each share button ── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-full, 9999px);
+  border: 1px solid var(--neutral-alpha-medium);
+  background: transparent;
+  color: var(--neutral-on-background-medium);
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    scale 0.15s ease;
+
+  svg {
+    width: 1rem;
+    height: 1rem;
+    fill: currentColor;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: var(--neutral-alpha-weak);
+    border-color: var(--neutral-alpha-strong);
+    color: var(--neutral-on-background-strong);
+    scale: 1.1;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand-solid-strong);
+    outline-offset: 2px;
+  }
+}
+
+.btnCopied {
+  background: var(--success-alpha-weak) !important;
+  border-color: var(--success-alpha-medium) !important;
+  color: var(--success-on-background-strong) !important;
+}
+
+/* Native share button: only visible on touch/mobile devices */
+.btnNative {
+  display: none;
+
+  @media (hover: none) and (pointer: coarse) {
+    display: flex;
+  }
+}

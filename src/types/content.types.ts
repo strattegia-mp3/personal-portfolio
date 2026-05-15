@@ -76,6 +76,8 @@ export interface BasePageConfig {
   label: string;
   /** Title of the page */
   title: string;
+  /** Title of the page (SEO and metadata) */
+  seoTitle: string;
   /** Description for SEO and metadata */
   description: string;
   /** OG Image should be put inside `public/images` folder */
@@ -238,3 +240,18 @@ export interface Gallery extends BasePageConfig {
     orientation: string;
   }>;
 }
+
+/**
+ * Tipagem global que junta todas as páginas e configurações
+ * e define o formato exato dos arquivos de idioma (pt.tsx e en.tsx).
+ */
+export type ContentTranslation = {
+  person: Person;
+  social: Social;
+  newsletter: Newsletter;
+  home: Home;
+  about: About;
+  blog: Blog;
+  work: Work;
+  gallery: Gallery;
+};

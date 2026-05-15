@@ -53,7 +53,7 @@ export function Posts({
   const displayedBlogs = range
     ? sortedBlogs.slice(
         range[0] - 1,
-        range.length === 2 ? range[1] : sortedBlogs.length
+        range.length === 2 ? range[1] : sortedBlogs.length,
       )
     : sortedBlogs;
 
@@ -67,12 +67,13 @@ export function Posts({
           marginBottom="40"
           gap="16"
         >
-          {displayedBlogs.map((post) => (
+          {displayedBlogs.map((post, idx) => (
             <Post
               key={post.slug}
               post={post}
               thumbnail={thumbnail}
               direction={direction}
+              priority={idx === 0 && thumbnail}
             />
           ))}
         </Grid>

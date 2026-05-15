@@ -13,101 +13,122 @@ import {
   opacity,
   SpacingToken,
 } from "@once-ui-system/core";
-import { useState, FormEvent } from "react";
+import { useState, useCallback, FormEvent, useId } from "react";
 import { mailchimp } from "@/resources";
 
+/* ─── i18n strings ───────────────────────────────────────── */
+const i18n = {
+  pt: {
+    emailPlaceholder: "Seu melhor e-mail",
+    firstNamePlaceholder: "Nome",
+    lastNamePlaceholder: "Sobrenome",
+    button: "Inscrever-se",
+    buttonLoading: "Enviando…",
+    successTitle: "Confirme seu e-mail! 🎉",
+    successMsg:
+      "Enviamos um link de confirmação. Verifique sua caixa de entrada (e o spam).",
+    errorInvalid: "Insira um e-mail válido.",
+    errorAlready: "Este e-mail já está inscrito.",
+    errorForgotten:
+      "Este e-mail foi removido anteriormente e não pode ser readicionado por aqui. Use outro e-mail.",
+    errorProvider: "Serviço temporariamente indisponível. Tente novamente.",
+    errorDefault: "Ocorreu um erro. Tente novamente.",
+  },
+  en: {
+    emailPlaceholder: "Your best email",
+    firstNamePlaceholder: "First name",
+    lastNamePlaceholder: "Last name",
+    button: "Subscribe",
+    buttonLoading: "Sending…",
+    successTitle: "Check your inbox! 🎉",
+    successMsg:
+      "We sent a confirmation link. Check your inbox (and spam folder).",
+    errorInvalid: "Please enter a valid email address.",
+    errorAlready: "This email is already subscribed.",
+    errorForgotten:
+      "This email was permanently deleted and cannot be re-added here. Please use another email.",
+    errorProvider: "Service temporarily unavailable. Please try again.",
+    errorDefault: "Something went wrong. Please try again.",
+  },
+} as const;
+
+type Status = "idle" | "loading" | "success" | "error";
+
+/* ─── Component ────────────────────────────────────────────── */
 export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
   ...flex
 }) => {
   const { content, currentLanguage } = useLanguage();
   const { newsletter } = content;
-
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [status, setStatus] = useState<
-    "idle" | "loading" | "success" | "error"
-  >("idle");
-  const [message, setMessage] = useState<string>("");
-
-  const i18n = {
-    pt: {
-      placeholderEmail: "Seu melhor e-mail",
-      placeholderFirstName: "Nome",
-      placeholderLastName: "Sobrenome",
-      button: "Inscrever-se",
-      buttonLoading: "Enviando...",
-      errorInvalid: "Por favor, insira um e-mail válido.",
-      errorDefault: "Ocorreu um erro ao inscrever-se.",
-      successTitle: "Inscrição confirmada!",
-      successMsg: "Verifique sua caixa de entrada.",
-    },
-    en: {
-      placeholderEmail: "Email address",
-      placeholderFirstName: "First Name",
-      placeholderLastName: "Last Name",
-      button: "Subscribe",
-      buttonLoading: "Sending...",
-      errorInvalid: "Please enter a valid email address.",
-      errorDefault: "An error occurred while subscribing.",
-      successTitle: "Subscription confirmed!",
-      successMsg: "Please check your inbox.",
-    },
-  };
   const t = i18n[currentLanguage];
 
-  const validateEmail = (email: string): boolean => {
-    if (email === "") return true;
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
-  };
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<Status>("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!email || !validateEmail(email)) {
-      setStatus("error");
-      setMessage(t.errorInvalid);
-      return;
-    }
-    setStatus("loading");
-    setMessage("");
+  // Accessibility: unique IDs per instance
+  const id = useId();
 
-    try {
-      const response = await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          firstName,
-          lastName,
-          language: currentLanguage,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || t.errorDefault);
+  const setError = useCallback((msg: string) => {
+    setStatus("error");
+    setErrorMsg(msg);
+  }, []);
 
-      setStatus("success");
-      setMessage(t.successMsg);
-      setEmail("");
-      setFirstName("");
-      setLastName("");
-    } catch (error: any) {
-      setStatus("error");
-      const cleanMsg = (error.message || t.errorDefault).replace(
-        /<[^>]*>?/gm,
-        ""
-      );
-      if (cleanMsg.includes("Member already exists")) {
-        setMessage(
-          currentLanguage === "pt"
-            ? "Este e-mail já está cadastrado."
-            : "This email is already subscribed."
-        );
-      } else {
-        setMessage(cleanMsg);
+  const handleSubmit = useCallback(
+    async (e: FormEvent) => {
+      e.preventDefault();
+
+      const trimmedEmail = email.trim();
+      if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        return setError(t.errorInvalid);
       }
-    }
-  };
+
+      setStatus("loading");
+      setErrorMsg("");
+
+      try {
+        const res = await fetch("/api/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: trimmedEmail,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
+            language: currentLanguage,
+          }),
+        });
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok) {
+          setStatus("success");
+          setEmail("");
+          setFirstName("");
+          setLastName("");
+          return;
+        }
+
+        switch (data.error) {
+          case "already_subscribed":
+            return setError(t.errorAlready);
+          case "invalid_email":
+            return setError(t.errorInvalid);
+          case "forgotten_email": // CORREÇÃO: Captura do novo erro
+            return setError(t.errorForgotten);
+          case "provider_error":
+          case "not_configured":
+            return setError(t.errorProvider);
+          default:
+            return setError(t.errorDefault);
+        }
+      } catch {
+        setError(t.errorProvider);
+      }
+    },
+    [email, firstName, lastName, currentLanguage, t, setError],
+  );
 
   if (newsletter.display === false) return null;
 
@@ -191,6 +212,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
           background="success-alpha-weak"
           radius="m"
           border="success-alpha-medium"
+          gap="4"
         >
           <Text
             variant="heading-strong-xs"
@@ -204,7 +226,7 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
             onBackground="success-medium"
             align="center"
           >
-            {message}
+            {t.successMsg}
           </Text>
         </Flex>
       ) : (
@@ -216,14 +238,20 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
           gap="12"
           onSubmit={handleSubmit}
           horizontal="center"
+          aria-label={
+            currentLanguage === "pt"
+              ? "Formulário de newsletter"
+              : "Newsletter form"
+          }
         >
           <Row fillWidth gap="12" s={{ direction: "column" }}>
             <Flex flex={1} fillWidth>
               <Input
-                id="FNAME"
+                id={`${id}-fname`}
                 name="FNAME"
                 type="text"
-                placeholder={t.placeholderFirstName}
+                autoComplete="given-name"
+                placeholder={t.firstNamePlaceholder}
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 disabled={status === "loading"}
@@ -231,10 +259,11 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
             </Flex>
             <Flex flex={1} fillWidth>
               <Input
-                id="LNAME"
+                id={`${id}-lname`}
                 name="LNAME"
                 type="text"
-                placeholder={t.placeholderLastName}
+                autoComplete="family-name"
+                placeholder={t.lastNamePlaceholder}
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 disabled={status === "loading"}
@@ -243,27 +272,32 @@ export const Mailchimp: React.FC<React.ComponentProps<typeof Column>> = ({
           </Row>
 
           <Input
-            id="mce-EMAIL"
+            id={`${id}-email`}
             name="EMAIL"
             type="email"
-            placeholder={t.placeholderEmail}
+            autoComplete="email"
+            inputMode="email"
+            placeholder={t.emailPlaceholder}
             required
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
-              if (status === "error") setStatus("idle");
+              if (status === "error") {
+                setStatus("idle");
+                setErrorMsg("");
+              }
             }}
             disabled={status === "loading"}
-            errorMessage={status === "error" ? message : undefined}
+            errorMessage={status === "error" ? errorMsg : undefined}
           />
 
           <Button
-            id="mc-embedded-subscribe"
             type="submit"
             size="m"
             fillWidth
             loading={status === "loading"}
             disabled={status === "loading"}
+            aria-busy={status === "loading"}
           >
             {status === "loading" ? t.buttonLoading : t.button}
           </Button>

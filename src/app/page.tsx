@@ -3,13 +3,15 @@ import HomeView from "@/views/HomeView";
 import { home, baseURL, person, about } from "@/resources";
 import { Meta, Schema } from "@once-ui-system/core";
 
+const OG_IMAGE = "/images/og/about.webp";
+
 export async function generateMetadata() {
   return Meta.generate({
-    title: home.title,
+    title: home.seoTitle,
     description: home.description,
     baseURL,
     path: home.path,
-    image: home.image,
+    image: OG_IMAGE,
   });
 }
 
@@ -20,13 +22,13 @@ export default function Home() {
   const sortedProjects = rawProjectPosts.sort(
     (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime()
+      new Date(a.metadata.publishedAt).getTime(),
   );
 
   const sortedBlogPosts = rawBlogPosts.sort(
     (a, b) =>
       new Date(b.metadata.publishedAt).getTime() -
-      new Date(a.metadata.publishedAt).getTime()
+      new Date(a.metadata.publishedAt).getTime(),
   );
 
   const jsonLd = {
@@ -35,7 +37,7 @@ export default function Home() {
     path: home.path,
     title: home.title,
     description: home.description,
-    image: `/api/og/generate?title=${encodeURIComponent(home.title)}`,
+    image: OG_IMAGE,
     author: {
       name: person.name,
       url: `${baseURL}${about.path}`,

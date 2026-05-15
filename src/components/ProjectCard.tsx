@@ -26,7 +26,7 @@ interface ProjectCardProps {
   descriptionEn?: string;
   avatars: { src: string }[];
   link: string;
-  repository?: string; /* 👈 ADICIONADO AQUI */
+  repository?: string;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -42,17 +42,15 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   descriptionEn,
   avatars,
   link,
-  repository /* 👈 ADICIONADO AQUI */,
+  repository,
 }) => {
   const { currentLanguage } = useLanguage();
   const [activeIndex, setActiveIndex] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
-  // Touch handling refs (no re-renders)
   const touchStartX = useRef(0);
   const touchDeltaX = useRef(0);
   const isDragging = useRef(false);
 
-  /* 👈 TRADUÇÕES DO REPOSITÓRIO ADICIONADAS AQUI */
   const labels = {
     pt: {
       readCase: "Ler estudo de caso",
@@ -89,7 +87,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     [count],
   );
 
-  /* ── Touch / swipe handlers (passive, zero layout thrash) ── */
   const onTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
     touchDeltaX.current = 0;
@@ -114,7 +111,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     <Column fillWidth gap="m">
       {validImages.length > 0 && (
         <div className={styles.carousel}>
-          {/* ── Track ── */}
           <div
             ref={trackRef}
             className={styles.track}
@@ -137,9 +133,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                     idx === 0 ? displayTitle : `${displayTitle} — ${idx + 1}`
                   }
                   fill
-                  quality={100}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1400px"
+                  quality={85}
+                  sizes="(max-width: 560px) 100vw, (max-width: 1024px) 90vw, 1200px"
                   priority={priority && idx === 0}
+                  loading={priority && idx === 0 ? "eager" : "lazy"}
+                  decoding={priority && idx === 0 ? "sync" : "async"}
                   className={styles.image}
                   draggable={false}
                 />
@@ -147,7 +145,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             ))}
           </div>
 
-          {/* ── Setas (desktop hover) ── */}
           {count > 1 && (
             <>
               <button
@@ -198,7 +195,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             </>
           )}
 
-          {/* ── Dots ── */}
           {count > 1 && (
             <div className={styles.dots} role="tablist" aria-label="Slides">
               {validImages.map((_, idx) => (
@@ -216,7 +212,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         </div>
       )}
 
-      {/* ── Info ── */}
       <Flex
         s={{ direction: "column" }}
         fillWidth
@@ -270,8 +265,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                   <Text variant="body-default-s">{t.viewProject}</Text>
                 </SmartLink>
               )}
-
-              {/* 👈 LINK DO REPOSITÓRIO ADICIONADO AQUI */}
               {repository && (
                 <SmartLink
                   suffixIcon="github"
