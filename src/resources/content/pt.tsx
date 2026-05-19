@@ -287,4 +287,28 @@ export const pt: ContentTranslation = {
     description: "Momentos que mereceram fotografias em minha jornada.",
     images: [...GALLERY_IMAGES],
   },
+  chat: {
+    fab: "Chat com Tori",
+    fabTooltip: "Converse com Tori 🐶",
+    title: "Chat com Tori",
+    subtitle: "Pergunte sobre a carreira e projetos do Victor",
+    placeholder: "Faça uma pergunta…",
+    send: "Enviar",
+    close: "Fechar chat",
+    error: "Algo deu errado. Au-au! Tente novamente.",
+    poweredBy: "Powered by Gemini · Pode cometer erros",
+    welcomeTitle: "Olá! 👋 Sou a Tori.",
+    welcomeSubtitle:
+      "Posso responder perguntas sobre experiência, projetos e habilidades do Victor.",
+    suggestions: [
+      "Quais tecnologias Victor domina?",
+      "Me fale sobre a startup MythMirror",
+      "Victor tem experiência com React?",
+      "Como entrar em contato com ele?",
+      "Quais são os hobbies do Victor?",
+      "Qual é a experiência dele na RenderUp?",
+      "O Victor trabalha com Inteligência Artificial?",
+      "Me fale sobre os projetos sociais dele.",
+    ],
+  },
 };

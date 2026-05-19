@@ -2,8 +2,17 @@ import { i18nContent } from "./content-i18n";
 
 const defaultContent = i18nContent.en;
 
-export const { person, social, newsletter, home, about, blog, work, gallery } =
-  defaultContent;
+export const {
+  person,
+  social,
+  newsletter,
+  home,
+  about,
+  blog,
+  work,
+  gallery,
+  chat,
+} = defaultContent;
 
 export {
   display,

@@ -25,6 +25,7 @@ import {
 } from "@/resources";
 import KonamiWrapper from "@/components/konamiCode/KonamiWrapper";
 import { Viewport } from "next";
+import ChatWrapper from "@/components/chat/ChatWrapper";
 
 const OG_IMAGE = "/images/og/about.webp";
 
@@ -89,7 +90,7 @@ export async function generateMetadata() {
     icons: {
       icon: [
         { url: "/favicon.ico" }, // Fallback para navegadores muito antigos
-        { url: "/images/icons/favicon.svg", type: "image/svg+xml" }, // Melhor para navegadores modernos
+        { url: "/images/icons/favicon.svg", type: "image/svg+xml" },
         {
           url: "/images/icons/favicon-96x96.png",
           sizes: "96x96",
@@ -204,6 +205,7 @@ export default async function RootLayout({
             </Flex>
             <Footer />
             <KonamiWrapper />
+            <ChatWrapper />
             <Analytics />
             <SpeedInsights />
           </Column>

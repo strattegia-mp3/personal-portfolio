@@ -3,6 +3,7 @@
 import { Row, Text, Button } from "@once-ui-system/core";
 import { useLanguage } from "@/components/LanguageContext";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 // Dicionário de bandeiras
 const flagMap: Record<string, string> = {
@@ -12,8 +13,12 @@ const flagMap: Record<string, string> = {
 
 export const LanguageToggle = () => {
   const { currentLanguage, toggleLanguage } = useLanguage();
+  const [mounted, setMounted] = useState(false);
 
-  // Fallback
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const currentFlag = flagMap[currentLanguage];
 
   return (
@@ -27,14 +32,22 @@ export const LanguageToggle = () => {
       title="Alternar idioma"
     >
       <Row vertical="center" gap="8">
-        {/* Bandeira */}
-        {currentFlag ? (
+        {!mounted ? (
+          <Text
+            variant="body-default-s"
+            aria-hidden="true"
+            style={{ width: 18, textAlign: "center" }}
+          >
+            🌐
+          </Text>
+        ) : currentFlag ? (
           <Image
             src={currentFlag}
             alt={`${currentLanguage} flag`}
             width={18}
             height={18}
             style={{ borderRadius: "2px" }}
+            priority
           />
         ) : (
           <Text variant="body-default-s" aria-hidden="true">
@@ -42,9 +55,9 @@ export const LanguageToggle = () => {
           </Text>
         )}
 
-        {/* Texto */}
+        {/* Texto do idioma */}
         <Text variant="label-default-s" onBackground="neutral-strong">
-          {currentLanguage.toUpperCase()}
+          {mounted ? currentLanguage.toUpperCase() : "--"}
         </Text>
       </Row>
     </Button>

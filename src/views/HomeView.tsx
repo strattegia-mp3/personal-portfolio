@@ -13,10 +13,21 @@ import {
 } from "@once-ui-system/core";
 import { useLanguage } from "@/components/LanguageContext";
 import { routes } from "@/resources";
-import { Mailchimp } from "@/components";
-import { Projects, ProjectData } from "@/components/work/Projects";
-import { Posts, PostData } from "@/components/blog/Posts";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import dynamic from "next/dynamic";
+import type { PostData } from "@/components/blog/Posts";
+import type { ProjectData } from "@/components/work/Projects";
+
+// ─── Otimização de Performance: Dynamic Imports ──────────────────────────────
+const Projects = dynamic(() =>
+  import("@/components/work/Projects").then((mod) => mod.Projects),
+);
+const Posts = dynamic(() =>
+  import("@/components/blog/Posts").then((mod) => mod.Posts),
+);
+const Mailchimp = dynamic(() =>
+  import("@/components").then((mod) => mod.Mailchimp),
+);
 
 interface HomeViewProps {
   blogPosts: PostData[];
@@ -117,35 +128,44 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         </Column>
       </Column>
 
-      <Projects range={[1, 1]} posts={projectPosts} />
+      {/* ─── Conteúdo Abaixo da Dobra ─── */}
+      <Column fillWidth gap="xl" style={{ display: "contents" }}>
+        <RevealFx translateY="12" delay={0.4}>
+          <Projects range={[1, 1]} posts={projectPosts} />
+        </RevealFx>
 
-      {routes["/blog"] && (
-        <Column fillWidth gap="24" marginBottom="s">
-          <Row fillWidth paddingRight="64">
-            <Line maxWidth={48} />
-          </Row>
-          <Row fillWidth gap="24" s={{ direction: "column" }}>
-            <Row flex={1} paddingLeft="l" paddingTop="24">
-              <Heading as="h2" variant="display-strong-xs" wrap="balance">
-                {blog.title}
-              </Heading>
-            </Row>
-            <Row flex={3} paddingX="20">
-              <Posts range={[1, 2]} posts={blogPosts} thumbnail />
-            </Row>
-          </Row>
-          <Row fillWidth paddingLeft="64" horizontal="end">
-            <Line maxWidth={48} />
-          </Row>
-        </Column>
-      )}
+        {routes["/blog"] && (
+          <RevealFx translateY="12" delay={0.5}>
+            <Column fillWidth gap="24" marginBottom="s">
+              <Row fillWidth paddingRight="64">
+                <Line maxWidth={48} />
+              </Row>
+              <Row fillWidth gap="24" s={{ direction: "column" }}>
+                <Row flex={1} paddingLeft="l" paddingTop="24">
+                  <Heading as="h2" variant="display-strong-xs" wrap="balance">
+                    {blog.title}
+                  </Heading>
+                </Row>
+                <Row flex={3} paddingX="20">
+                  <Posts range={[1, 2]} posts={blogPosts} thumbnail />
+                </Row>
+              </Row>
+              <Row fillWidth paddingLeft="64" horizontal="end">
+                <Line maxWidth={48} />
+              </Row>
+            </Column>
+          </RevealFx>
+        )}
 
-      {/* Projetos restantes */}
-      <RevealFx translateY="16" delay={0.1}>
-        <Projects range={[2]} posts={projectPosts} />
-      </RevealFx>
+        {/* Projetos restantes */}
+        <RevealFx translateY="12" delay={0.6}>
+          <Projects range={[2]} posts={projectPosts} />
+        </RevealFx>
 
-      <Mailchimp />
+        <RevealFx translateY="12" delay={0.7}>
+          <Mailchimp />
+        </RevealFx>
+      </Column>
     </Column>
   );
 }

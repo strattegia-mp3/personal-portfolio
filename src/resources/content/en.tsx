@@ -284,4 +284,28 @@ export const en: ContentTranslation = {
     description: "Moments that deserved to be photographed on my journey.",
     images: [...GALLERY_IMAGES],
   },
+  chat: {
+    fab: "Chat with Tori",
+    fabTooltip: "Chat with Tori 🐶",
+    title: "Chat with Tori",
+    subtitle: "Ask about Victor's career and projects",
+    placeholder: "Ask a question…",
+    send: "Send",
+    close: "Close chat",
+    error: "Something went wrong. Woof! Try again.",
+    poweredBy: "Powered by Gemini · May make mistakes",
+    welcomeTitle: "Hi! 👋 I'm Tori.",
+    welcomeSubtitle:
+      "I can answer questions about Victor's experience, projects and skills.",
+    suggestions: [
+      "What technologies does Victor know?",
+      "Tell me about MythMirror startup",
+      "Does Victor know React?",
+      "How to get in touch with him?",
+      "What are Victor's hobbies?",
+      "Tell me about his work at RenderUp",
+      "Does Victor work with AI?",
+      "Tell me about his social projects.",
+    ],
+  },
 };

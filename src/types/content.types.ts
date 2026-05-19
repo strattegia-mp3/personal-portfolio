@@ -242,8 +242,39 @@ export interface Gallery extends BasePageConfig {
 }
 
 /**
- * Tipagem global que junta todas as páginas e configurações
- * e define o formato exato dos arquivos de idioma (pt.tsx e en.tsx).
+ * Chat configuration.
+ * @description Configuration for the chat widget, including labels, tooltips, and default messages.
+ */
+export interface Chat {
+  /** Label or icon text for the Floating Action Button (FAB) */
+  fab: string;
+  /** Tooltip text displayed when hovering over the FAB */
+  fabTooltip: string;
+  /** Main title of the chat interface */
+  title: string;
+  /** Subtitle or status text of the chat interface */
+  subtitle: string;
+  /** Placeholder text for the message input field */
+  placeholder: string;
+  /** Label or tooltip for the send message button */
+  send: string;
+  /** Label or tooltip for the close chat button */
+  close: string;
+  /** Generic error message displayed when a chat action fails */
+  error: string;
+  /** Attribution text displayed in the chat (e.g., "Powered by OpenAI") */
+  poweredBy: string;
+  /** Title of the welcome message displayed when opening the chat */
+  welcomeTitle: string;
+  /** Subtitle or description of the welcome message */
+  welcomeSubtitle: string;
+  /** List of suggested prompts or questions to help the user start a conversation */
+  suggestions: string[];
+}
+
+/**
+  * Global typing that combines all pages and settings 
+  * and defines the exact format of the language files (pt.tsx and en.tsx).
  */
 export type ContentTranslation = {
   person: Person;
@@ -254,4 +285,5 @@ export type ContentTranslation = {
   blog: Blog;
   work: Work;
   gallery: Gallery;
+  chat: Chat;
 };
