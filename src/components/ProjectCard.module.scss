@@ -11,11 +11,6 @@
   overflow: hidden;
   background-color: var(--neutral-alpha-weak);
 
-  /*
-   * Ken-Burns sutil no hover — só roda no desktop onde há cursor.
-   * Usa will-change APENAS no hover, não no estado idle,
-   * para não ocupar camada de composição desnecessariamente.
-   */
   @media (hover: hover) {
     &:hover .image {
       transform: scale(1.01);
@@ -32,8 +27,6 @@
   overflow: hidden;
 
   @include bp.s {
-    /* Opção A: Manter 16/9 apagando este bloco, ou usar 16/10 para ganhar 
-       um pouquinho de altura sem cortar tanto as laterais. */
     aspect-ratio: 16 / 10;
   }
 }
@@ -43,17 +36,12 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  /*
-   * transition em transform: GPU-composited, não dispara layout/paint.
-   * cubic-bezier reproduz a sensação do easing do Once UI.
-   */
   transition: transform 380ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .image {
   object-fit: cover;
   object-position: center top;
-  /* transition separada do slide para o efeito de scale suave */
   transition: transform 500ms cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
   -webkit-user-drag: none;
@@ -77,7 +65,7 @@
   height: 2rem;
   padding: 0;
 
-  /* Borda sutil para destacar em imagens muito claras */
+  /* Borda sutil */
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full, 9999px);
 
@@ -167,7 +155,7 @@
 }
 
 .dot {
-  width: 0.375rem;
+  width: 1rem;
   height: 0.375rem;
   padding: 0;
   border: none;
@@ -178,8 +166,10 @@
 
   opacity: 0.4;
   cursor: pointer;
+  transform: scaleX(0.375);
+  transform-origin: center;
   transition:
-    width 250ms cubic-bezier(0.4, 0, 0.2, 1),
+    transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
     opacity 250ms ease;
 
   &:hover {
@@ -194,7 +184,7 @@
 }
 
 .dotActive {
-  width: 1rem;
+  transform: scaleX(1);
   opacity: 1;
 }
 

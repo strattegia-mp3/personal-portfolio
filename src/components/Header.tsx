@@ -18,33 +18,47 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({
   timeZone,
   locale = "en-GB",
 }) => {
-  const [currentTime, setCurrentTime] = useState("");
+  const [currentTime, setCurrentTime] = useState("00:00:00");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    const fmt = new Intl.DateTimeFormat(locale, {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
+
     const updateTime = () => {
-      const now = new Date();
-      const options: Intl.DateTimeFormatOptions = {
-        timeZone,
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      };
       try {
-        const timeString = new Intl.DateTimeFormat(locale, options).format(now);
-        setCurrentTime(timeString);
-      } catch (e) {
+        setCurrentTime(fmt.format(new Date()));
+      } catch {
         setCurrentTime("00:00:00");
       }
     };
 
     updateTime();
-    const intervalId = setInterval(updateTime, 1000);
-
-    return () => clearInterval(intervalId);
+    setMounted(true);
+    const id = setInterval(updateTime, 1000);
+    return () => clearInterval(id);
   }, [timeZone, locale]);
 
-  return <>{currentTime}</>;
+  return (
+    <span
+      aria-live="off"
+      style={{
+        visibility: mounted ? "visible" : "hidden",
+        display: "inline-block",
+        width: "8ch",
+        minWidth: "8ch",
+        textAlign: "right",
+        fontVariantNumeric: "tabular-nums",
+      }}
+    >
+      {currentTime}
+    </span>
+  );
 };
 
 export const Header = () => {
@@ -200,13 +214,19 @@ export const Header = () => {
             </Row>
           </Row>
         </Row>
-        <Flex fillWidth horizontal="end" vertical="center">
+        <Flex
+          fillWidth
+          horizontal="end"
+          vertical="center"
+          style={{ minWidth: 0 }}
+        >
           <Flex
             paddingRight="12"
             horizontal="end"
             vertical="center"
             textVariant="body-default-s"
             gap="20"
+            style={{ minWidth: 0 }}
           >
             <Flex s={{ hide: true }}>
               {display.time && (

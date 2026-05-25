@@ -18,12 +18,16 @@ interface TableOfContentsProps {
   };
 }
 
-const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) => {
+const TableOfContents: React.FC<TableOfContentsProps> = ({
+  structure,
+  about,
+}) => {
   const scrollTo = (id: string, offset: number) => {
     const element = document.getElementById(id);
     if (element) {
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
+      const rect = element.getBoundingClientRect();
+      const scrollY = window.scrollY;
+      const offsetPosition = rect.top + scrollY - offset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -74,7 +78,11 @@ const TableOfContents: React.FC<TableOfContentsProps> = ({ structure, about }) =
                     vertical="center"
                     onClick={() => scrollTo(item, 80)}
                   >
-                    <Flex height="1" minWidth="8" background="neutral-strong"></Flex>
+                    <Flex
+                      height="1"
+                      minWidth="8"
+                      background="neutral-strong"
+                    ></Flex>
                     <Text>{item}</Text>
                   </Flex>
                 ))}

@@ -133,7 +133,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
                     idx === 0 ? displayTitle : `${displayTitle} — ${idx + 1}`
                   }
                   fill
-                  quality={85}
+                  quality={75}
                   sizes="(max-width: 560px) 100vw, (max-width: 1024px) 90vw, 1200px"
                   priority={priority && idx === 0}
                   loading={priority && idx === 0 ? "eager" : "lazy"}

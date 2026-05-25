@@ -19,40 +19,53 @@ const nextConfig = {
       {
         source: "/images/(.*)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
       {
         source: "/_next/static/(.*)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
       {
         source: "/(.*\\.webp|.*\\.jpg|.*\\.png|.*\\.ico|.*\\.svg|.*\\.woff2)",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
         ],
       },
       {
-        // Security headers — todas as rotas
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
-          { key: "Link", value: "<https://fonts.gstatic.com>; rel=preconnect; crossorigin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
         ],
       },
     ];
   },
 
   images: {
+    // avif antes de webp: melhor compressão
     formats: ["image/avif", "image/webp"],
+    // Tamanhos alinhados com breakpoints reais do layout
     deviceSizes: [390, 560, 768, 1024, 1280, 1920],
     imageSizes: [64, 128, 256, 384, 640, 800],
     minimumCacheTTL: 31536000,
+    dangerouslyAllowSVG: false,
     remotePatterns: [
       {
         protocol: "https",
@@ -68,6 +81,8 @@ const nextConfig = {
       "lucide-react",
       "framer-motion",
     ],
+    // Reduz CSS não-usado no caminho crítico
+    optimizeCss: true,
   },
 
   sassOptions: {

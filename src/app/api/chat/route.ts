@@ -24,6 +24,7 @@ REGRAS DE COMPORTAMENTO CRÍTICAS:
 🔥 REGRAS DE CONCISÃO:
 - Seja direto e objetivo (máximo de 2 parágrafos curtos).
 - Use bullet points (*) sempre que for listar informações.
+- NUNCA deixe frases ou raciocínios pela metade. Certifique-se de concluir a resposta de forma natural.
 `;
 
 const VICTOR_CONTEXT = `${SYSTEM_PROMPT}\n\n================\nBASE DE CONHECIMENTO:\n================\n${KNOWLEDGE_BASE}`;
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
       model: google("gemini-2.5-flash"),
       system: VICTOR_CONTEXT,
       messages: recentMessages,
-      maxTokens: 400, 
+      maxTokens: 800, 
       temperature: 0.3,
     });
 

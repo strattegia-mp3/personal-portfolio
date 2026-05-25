@@ -5,7 +5,6 @@ import {
   Text,
   Button,
   Avatar,
-  RevealFx,
   Column,
   Badge,
   Row,
@@ -18,7 +17,7 @@ import dynamic from "next/dynamic";
 import type { PostData } from "@/components/blog/Posts";
 import type { ProjectData } from "@/components/work/Projects";
 
-// ─── Otimização de Performance: Dynamic Imports ──────────────────────────────
+// ─── Conteúdo não-crítico: carregado fora do caminho inicial ─────────────────
 const Projects = dynamic(() =>
   import("@/components/work/Projects").then((mod) => mod.Projects),
 );
@@ -27,6 +26,11 @@ const Posts = dynamic(() =>
 );
 const Mailchimp = dynamic(() =>
   import("@/components").then((mod) => mod.Mailchimp),
+);
+
+// ─── RevealFx abaixo da dobra: carregado de forma lazy ──────────────────────
+const RevealFx = dynamic(() =>
+  import("@once-ui-system/core").then((mod) => mod.RevealFx),
 );
 
 interface HomeViewProps {
@@ -45,7 +49,41 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         titleEn="Victor Rocha | Software Developer"
         fallback="Victor Rocha"
       />
-      {/* Hero Section */}
+
+      <style>{`
+        /* Badge shine — GPU composited via transform */
+        .cls-safe-badge [id="badge"]::before,
+        .cls-safe-badge a::before,
+        .cls-safe-badge::before {
+          left: 0 !important;
+          animation-name: gpuSafeShine !important;
+          will-change: transform;
+        }
+        @keyframes gpuSafeShine {
+          0% { transform: translateX(-150%); }
+          100% { transform: translateX(150%); }
+        }
+
+        /* Hero animations: composited (transform + opacity) */
+        /* Sem RevealFx above-the-fold — evita CLS/reflow na hidratação */
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero-item {
+          animation: heroFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        .hero-item-0 { animation-delay: 0ms; }
+        .hero-item-1 { animation-delay: 60ms; }
+        .hero-item-2 { animation-delay: 120ms; }
+        .hero-item-3 { animation-delay: 180ms; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-item { animation: none; opacity: 1; transform: none; }
+        }
+      `}</style>
+
+      {/* Hero Section — animações CSS puras, sem RevealFx, sem hidratação adicional */}
       <Column fillWidth horizontal="center" gap="m">
         <Column maxWidth="s" horizontal="center" align="center">
           {home.featured.display && (
@@ -70,20 +108,16 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
             </RevealFx>
           )}
 
-          <RevealFx
-            translateY="4"
-            fillWidth
-            horizontal="center"
-            paddingBottom="16"
-          >
+          {/* Headline */}
+          <RevealFx fillWidth horizontal="center" paddingBottom="16">
             <Heading wrap="balance" variant="display-strong-l">
               {home.headline}
             </Heading>
           </RevealFx>
 
           <RevealFx
-            translateY="8"
-            delay={0.15}
+            translateY="4"
+            delay={0.08}
             fillWidth
             horizontal="center"
             paddingBottom="32"
@@ -99,7 +133,7 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
 
           <RevealFx
             paddingTop="12"
-            delay={0.25}
+            delay={0.15}
             horizontal="center"
             paddingLeft="12"
           >
@@ -128,14 +162,14 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         </Column>
       </Column>
 
-      {/* ─── Conteúdo Abaixo da Dobra ─── */}
+      {/* ─── Conteúdo Abaixo da Dobra — RevealFx seguro fora do viewport inicial ─── */}
       <Column fillWidth gap="xl" style={{ display: "contents" }}>
-        <RevealFx translateY="12" delay={0.4}>
+        <RevealFx translateY="12" delay={0.2}>
           <Projects range={[1, 1]} posts={projectPosts} />
         </RevealFx>
 
         {routes["/blog"] && (
-          <RevealFx translateY="12" delay={0.5}>
+          <RevealFx translateY="12" delay={0.25}>
             <Column fillWidth gap="24" marginBottom="s">
               <Row fillWidth paddingRight="64">
                 <Line maxWidth={48} />
@@ -158,11 +192,11 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         )}
 
         {/* Projetos restantes */}
-        <RevealFx translateY="12" delay={0.6}>
+        <RevealFx translateY="12" delay={0.3}>
           <Projects range={[2]} posts={projectPosts} />
         </RevealFx>
 
-        <RevealFx translateY="12" delay={0.7}>
+        <RevealFx translateY="12" delay={0.35}>
           <Mailchimp />
         </RevealFx>
       </Column>

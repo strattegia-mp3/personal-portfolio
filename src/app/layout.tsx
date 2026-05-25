@@ -7,25 +7,16 @@ import {
   Flex,
   Meta,
   opacity,
-  RevealFx,
   SpacingToken,
 } from "@once-ui-system/core";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
 import { LanguageProvider } from "@/components/LanguageContext";
-import {
-  baseURL,
-  effects,
-  person,
-  fonts,
-  style,
-  dataStyle,
-  home,
-} from "@/resources";
-import KonamiWrapper from "@/components/konamiCode/KonamiWrapper";
+import { ClientOnlyWidgets } from "@/components/client/ClientOnlyWidgets";
+import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
 import { Viewport } from "next";
-import ChatWrapper from "@/components/chat/ChatWrapper";
 
 const OG_IMAGE = "/images/og/about.webp";
 
@@ -69,7 +60,6 @@ const themeScript = `
   })();
 `;
 
-// Movendo o theme-color para o objeto Viewport nativo do Next.js
 export const viewport: Viewport = {
   themeColor: "#7c3aed",
 };
@@ -83,13 +73,15 @@ export async function generateMetadata() {
     image: OG_IMAGE,
   });
 
-  // Estendendo os metadados gerados pelo OnceUI com os seus ícones e manifest
   return {
     ...baseMeta,
     manifest: "/site.webmanifest",
+    verification: {
+      google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+    },
     icons: {
       icon: [
-        { url: "/favicon.ico" }, // Fallback para navegadores muito antigos
+        { url: "/favicon.ico" },
         { url: "/images/icons/favicon.svg", type: "image/svg+xml" },
         {
           url: "/images/icons/favicon-96x96.png",
@@ -119,25 +111,6 @@ export default async function RootLayout({
       )}
     >
       <head>
-        {/* Preconnects for faster font loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-
-        {/* OG image preload for crawlers */}
-        <link rel="preload" href={OG_IMAGE} as="image" type="image/webp" />
-
-        <link
-          rel="preload"
-          href={person.avatar}
-          as="image"
-          type="image/webp"
-          fetchPriority="high"
-        />
-
         <script
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: themeScript }}
@@ -154,7 +127,16 @@ export default async function RootLayout({
             padding="0"
             horizontal="center"
           >
-            <RevealFx fill position="absolute">
+            <Flex
+              aria-hidden="true"
+              position="fixed"
+              top="0"
+              left="0"
+              right="0"
+              bottom="0"
+              zIndex={0}
+              pointerEvents="none"
+            >
               <Background
                 mask={{
                   x: effects.mask.x,
@@ -195,7 +177,7 @@ export default async function RootLayout({
                   color: effects.lines.color,
                 }}
               />
-            </RevealFx>
+            </Flex>
             <Flex fillWidth minHeight="16" s={{ hide: true }} />
             <Header />
             <Flex zIndex={0} fillWidth padding="l" horizontal="center" flex={1}>
@@ -204,10 +186,16 @@ export default async function RootLayout({
               </Flex>
             </Flex>
             <Footer />
-            <KonamiWrapper />
-            <ChatWrapper />
-            <Analytics />
-            <SpeedInsights />
+            <ClientOnlyWidgets />
+            {process.env.NODE_ENV === "production" && (
+              <>
+                <Analytics />
+                <SpeedInsights />
+                {process.env.NEXT_PUBLIC_GA_ID && (
+                  <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+                )}
+              </>
+            )}
           </Column>
         </LanguageProvider>
       </Providers>

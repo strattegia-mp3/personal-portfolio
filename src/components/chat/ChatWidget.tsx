@@ -46,7 +46,7 @@ const TypingIndicator = memo(function TypingIndicator() {
   );
 });
 
-/* ─── Sugestões Dinâmicas ──────────────────────────────── */
+/* ─── Chips de Sugestões ──────────────────────────────── */
 interface ChipsProps {
   onSelect: (q: string) => void;
   suggestions: string[];
@@ -54,7 +54,7 @@ interface ChipsProps {
 
 const Chips = memo(function Chips({ onSelect, suggestions }: ChipsProps) {
   return (
-    <div className={styles.chips} role="list" aria-label="Suggested questions">
+    <div className={styles.chips} role="list" aria-label="Perguntas sugeridas">
       {suggestions.map((q) => (
         <button
           key={q}
@@ -76,7 +76,6 @@ export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [announced, setAnnounced] = useState(false);
 
-
   const { content } = useLanguage();
   const t = content.chat;
 
@@ -84,97 +83,103 @@ export default function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<HTMLDivElement>(null);
   const labelId = useId();
 
-  const [startY, setStartY] = useState<number | null>(null);
+  // ── Swipe-to-dismiss (apenas no drag handle/header) ──────────────────
+  const swipeStartY = useRef<number | null>(null);
   const [swipeOffset, setSwipeOffset] = useState(0);
+  const isDraggingHandle = useRef(false);
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartY(e.touches[0].clientY);
+  const handleDragStart = (e: React.TouchEvent) => {
+    swipeStartY.current = e.touches[0].clientY;
+    isDraggingHandle.current = true;
+    setSwipeOffset(0);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (startY === null) return;
-    const currentY = e.touches[0].clientY;
-    const diff = currentY - startY;
-
+  const handleDragMove = useCallback((e: React.TouchEvent) => {
+    if (!isDraggingHandle.current || swipeStartY.current === null) return;
+    const diff = e.touches[0].clientY - swipeStartY.current;
     if (diff > 0) {
+      // Só permite arrastar para baixo
+      e.preventDefault();
       setSwipeOffset(diff);
     }
-  };
+  }, []);
 
-  const handleTouchEnd = () => {
+  const handleDragEnd = useCallback(() => {
     if (swipeOffset > 100) {
       setOpen(false);
     }
     setSwipeOffset(0);
-    setStartY(null);
-  };
+    swipeStartY.current = null;
+    isDraggingHandle.current = false;
+  }, [swipeOffset]);
 
+  // ── Portal root ───────────────────────────────────────────────────────
   useEffect(() => {
     const rootNode = document.createElement("div");
-    rootNode.id = "tori-chat-ultimate-root";
-
+    rootNode.id = "tori-chat-root";
     rootNode.style.cssText = `
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
-      width: 100vw !important;
-      height: 100vh !important;
+      width: 100% !important;
+      height: 100% !important;
       z-index: 2147483647 !important;
       pointer-events: none !important;
     `;
-
     document.body.appendChild(rootNode);
     setPortalNode(rootNode);
-
     return () => {
-      if (rootNode.parentNode) {
-        rootNode.parentNode.removeChild(rootNode);
-      }
+      if (rootNode.parentNode) rootNode.parentNode.removeChild(rootNode);
     };
   }, []);
 
-  // Sugestões Dinâmicas
+  // ── Sugestões aleatórias ao abrir ────────────────────────────────────
   useEffect(() => {
     if (open && t.suggestions) {
-      const pool = t.suggestions;
-      const shuffled = [...pool].sort(() => 0.5 - Math.random());
+      const shuffled = [...t.suggestions].sort(() => 0.5 - Math.random());
       setCurrentSuggestions(shuffled.slice(0, 3));
     }
   }, [open, t.suggestions]);
 
-  // Block Scroll para Chat Vazio
+  // ── Bloqueio de scroll da página quando o chat está aberto (mobile) ──
   useEffect(() => {
-    const panel = panelRef.current;
-    if (!panel || !open) return;
-
-    const preventUnwantedScroll = (e: WheelEvent | TouchEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-
-      const messagesDiv = panel.querySelector('[role="log"]');
-      if (messagesDiv && messagesDiv.contains(target)) {
-        if (messagesDiv.scrollHeight <= messagesDiv.clientHeight) {
-          e.preventDefault();
-        }
-        return;
-      }
-
-      e.preventDefault();
-    };
-
-    panel.addEventListener("wheel", preventUnwantedScroll, { passive: false });
-    panel.addEventListener("touchmove", preventUnwantedScroll, {
-      passive: false,
-    });
-
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) document.body.style.overflow = "hidden";
     return () => {
-      panel.removeEventListener("wheel", preventUnwantedScroll);
-      panel.removeEventListener("touchmove", preventUnwantedScroll);
+      document.body.style.overflow = prev;
     };
   }, [open]);
 
+  // ── Ajuste para teclado virtual no mobile ────────────────────────────
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    const onViewportChange = () => {
+      if (window.innerWidth > 768) {
+        setKeyboardVisible(false);
+        setKeyboardHeight(0);
+        return;
+      }
+      const kbHeight = window.innerHeight - vv.height - vv.offsetTop;
+      const visible = kbHeight > 60;
+      setKeyboardVisible(visible);
+      setKeyboardHeight(visible ? Math.max(0, kbHeight) : 0);
+    };
+
+    vv.addEventListener("resize", onViewportChange, { passive: true });
+    return () => vv.removeEventListener("resize", onViewportChange);
+  }, []);
+
+  // ── AI SDK ────────────────────────────────────────────────────────────
   const {
     messages,
     input,
@@ -186,19 +191,37 @@ export default function ChatWidget() {
   } = useChat({
     api: "/api/chat",
     onError: (err) => console.error("Erro do AI SDK:", err.message),
-    onFinish: () => bottomRef.current?.scrollIntoView({ behavior: "smooth" }),
+    onFinish: () =>
+      requestAnimationFrame(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+      }),
   });
 
+  // ── Scroll para o fim quando mensagens mudam ──────────────────────────
   useEffect(() => {
-    if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!open) return;
+    requestAnimationFrame(() => {
+      bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    });
   }, [messages, open]);
 
+  // ── Focus no input ao abrir ───────────────────────────────────────────
   useEffect(() => {
     if (open) {
-      setTimeout(() => inputRef.current?.focus(), 120);
+      const timer = setTimeout(() => inputRef.current?.focus(), 150);
       if (!announced) setAnnounced(true);
+      return () => clearTimeout(timer);
     }
   }, [open, announced]);
+
+  // ── Fechar com Escape ──────────────────────────────────────────────────
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && open) setOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
 
   const sendSuggestion = useCallback(
     (q: string) => {
@@ -208,45 +231,63 @@ export default function ChatWidget() {
     [setInput],
   );
 
+  const handleOpen = useCallback(() => setOpen((v) => !v), []);
+  const handleClose = useCallback(() => setOpen(false), []);
+
   const isEmpty = messages.length === 0;
+
+  // ── Estilos de swipe inline ────────────────────────────────────────────
+  const panelStyle =
+    swipeOffset > 0
+      ? {
+          transform: `translateY(${swipeOffset}px)`,
+          transition: "none",
+          opacity: Math.max(1 - swipeOffset / 300, 0.3),
+        }
+      : undefined;
+
+  const backdropOpacity =
+    swipeOffset > 0 ? Math.max(1 - swipeOffset / 250, 0) : undefined;
 
   if (!portalNode) return null;
 
   const chatContent = (
     <>
+      {/* ── FAB Button ── */}
       <div
-        className={`${styles.fabContainer} ${open ? styles.fabContainerOpen : ""}`}
+        className={`${styles.fabContainer} ${open ? styles.fabContainerHidden : ""}`}
         style={{ pointerEvents: "auto" }}
       >
         {!open && <div className={styles.tooltipBubble}>{t.fabTooltip}</div>}
         <button
-          className={`${styles.fab} ${open ? styles.fabOpen : ""}`}
-          onClick={() => setOpen((v) => !v)}
+          className={styles.fab}
+          onClick={handleOpen}
           aria-label={open ? t.close : t.fab}
           aria-expanded={open}
           aria-controls="chat-panel"
           type="button"
         >
-          {open ? (
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              aria-hidden
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          ) : (
-            <div className={styles.avatarWrapper}>
-              <DogAvatar size="large" />
-              <div className={styles.pulseDot}></div>
-            </div>
-          )}
+          <div className={styles.avatarWrapper}>
+            <DogAvatar size="large" />
+            <div className={styles.pulseDot} />
+          </div>
         </button>
       </div>
+
+      {/* ── Mobile Backdrop ── */}
+      <div
+        className={`${styles.backdrop} ${open ? styles.backdropOpen : ""}`}
+        style={{
+          opacity: backdropOpacity,
+          transition:
+            swipeOffset > 0
+              ? "none"
+              : "opacity 0.35s cubic-bezier(0.2, 0.8, 0.2, 1)",
+          pointerEvents: open ? "auto" : "none",
+        }}
+        onClick={handleClose}
+        aria-hidden="true"
+      />
 
       {/* ── Chat Panel ── */}
       <div
@@ -254,15 +295,8 @@ export default function ChatWidget() {
         ref={panelRef}
         className={`${styles.panel} ${open ? styles.panelOpen : ""}`}
         style={{
-          pointerEvents: "auto",
-          transform:
-            swipeOffset > 0 ? `translateY(${swipeOffset}px)` : undefined,
-          opacity:
-            swipeOffset > 0 ? Math.max(1 - swipeOffset / 250, 0.4) : undefined,
-          transition:
-            swipeOffset > 0
-              ? "none"
-              : "all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)",
+          pointerEvents: open ? "auto" : "none",
+          ...panelStyle,
         }}
         role="dialog"
         aria-modal="true"
@@ -270,14 +304,14 @@ export default function ChatWidget() {
         aria-hidden={!open}
         {...(!open && { inert: true })}
       >
-        {/* Header */}
+        {/* Header com drag handle */}
         <div
           className={styles.header}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}
         >
-          <div className={styles.dragHandle} />
+          <div className={styles.dragHandle} aria-hidden="true" />
           <div className={styles.headerInner}>
             <div className={styles.headerInfo}>
               <div className={styles.headerAvatar} aria-hidden>
@@ -293,7 +327,7 @@ export default function ChatWidget() {
             </div>
             <button
               className={styles.closeBtn}
-              onClick={() => setOpen(false)}
+              onClick={handleClose}
               aria-label={t.close}
               type="button"
             >
@@ -314,10 +348,16 @@ export default function ChatWidget() {
 
         {/* Messages */}
         <div
+          ref={messagesRef}
           className={styles.messages}
           role="log"
           aria-live="polite"
           aria-relevant="additions"
+          style={{
+            paddingBottom: keyboardVisible
+              ? `calc(${keyboardHeight}px + 80px)`
+              : undefined,
+          }}
         >
           {isEmpty ? (
             <>
@@ -337,7 +377,9 @@ export default function ChatWidget() {
             messages.map((m) => (
               <div
                 key={m.id}
-                className={`${styles.message} ${m.role === "user" ? styles.user : styles.bot}`}
+                className={`${styles.message} ${
+                  m.role === "user" ? styles.user : styles.bot
+                }`}
               >
                 {m.role === "assistant" && (
                   <DogAvatar size="small" animated={false} />
@@ -360,42 +402,52 @@ export default function ChatWidget() {
               </div>
             </div>
           )}
-          <div ref={bottomRef} />
+          <div ref={bottomRef} aria-hidden="true" />
         </div>
 
         {/* Input */}
-        <form className={styles.inputRow} onSubmit={handleSubmit}>
-          <input
-            ref={inputRef}
-            className={styles.input}
-            value={input}
-            onChange={handleInputChange}
-            placeholder={t.placeholder}
-            disabled={isLoading}
-            maxLength={500}
-            autoComplete="off"
-            spellCheck="false"
-          />
-          <button
-            className={styles.sendBtn}
-            type="submit"
-            disabled={isLoading || !input.trim()}
-            aria-label={t.send}
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              aria-hidden
+        <div
+          className={styles.inputWrapper}
+          style={
+            keyboardVisible
+              ? { position: "relative", bottom: "auto" }
+              : undefined
+          }
+        >
+          <form className={styles.inputRow} onSubmit={handleSubmit}>
+            <input
+              ref={inputRef}
+              className={styles.input}
+              value={input}
+              onChange={handleInputChange}
+              placeholder={t.placeholder}
+              disabled={isLoading}
+              maxLength={500}
+              autoComplete="off"
+              spellCheck="false"
+              enterKeyHint="send"
+            />
+            <button
+              className={styles.sendBtn}
+              type="submit"
+              disabled={isLoading || !input.trim()}
+              aria-label={t.send}
             >
-              <line x1="22" y1="2" x2="11" y2="13" />
-              <polygon points="22 2 15 22 11 13 2 9 22 2" />
-            </svg>
-          </button>
-        </form>
-        <p className={styles.disclaimer}>{t.poweredBy}</p>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                aria-hidden
+              >
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
+            </button>
+          </form>
+          <p className={styles.disclaimer}>{t.poweredBy}</p>
+        </div>
       </div>
     </>
   );
