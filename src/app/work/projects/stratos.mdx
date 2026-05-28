@@ -1,0 +1,141 @@
+---
+title: "Stratos"
+title_pt: "Stratos: Template High-Ticket"
+title_en: "Stratos: High-Ticket Template"
+publishedAt: "2024-08-15"
+summary: "Premium landing page template for High-Ticket conversion with immersive UX and smooth scroll."
+summary_pt: "Template premium de landing page para conversão High-Ticket com UX imersiva e smooth scroll."
+summary_en: "Premium landing page template for High-Ticket conversion with immersive UX and smooth scroll."
+images:
+  - "/images/projects/stratos/stratos_og.webp"
+  - "/images/projects/stratos/stratos-hero.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Creator & Lead Developer"
+    avatar: "/images/avatars/victor.webp"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://stratos-gamma.vercel.app"
+repository: "https://github.com/strattegia-mp3/stratos"
+tag: "Frontend Premium"
+tag_pt: "Frontend Premium"
+tag_en: "Frontend Premium"
+---
+
+<Pt>
+  ## O Desafio
+
+Vender produtos digitais e mentorias *High-Ticket* exige mais do que um bom copy; exige uma percepção de valor altíssima logo nos primeiros segundos de navegação. 
+
+O objetivo do **Stratos** foi construir um template de landing page que aliasse estética cinematográfica a uma engenharia de performance impecável. Os principais focos foram:
+
+- **Experiência Premium:** Substituir a rolagem padrão e seca do navegador por um *scroll* inercial e amanteigado.
+- **Design Assíncrono:** Quebrar a monotonia visual utilizando layouts modernos como o Bento Grid para provas sociais e *sliders* baseados em gestos.
+- **SEO & Tracking Avançados:** Garantir que o visual não prejudicasse a indexação, com metadados robustos e integração nativa com Google Analytics 4 e Vercel Analytics.
+</Pt>
+
+<En>
+  ## The Challenge
+
+Selling digital products and *High-Ticket* mentoring requires more than good copy; it demands extremely high perceived value in the very first seconds of navigation.
+
+The goal of **Stratos** was to build a landing page template that combined cinematic aesthetics with flawless performance engineering. The main focus areas were:
+
+- **Premium Experience:** Replacing the browser's default, dry scrolling with an inertial, buttery-smooth scroll.
+- **Asynchronous Design:** Breaking visual monotony using modern layouts like a Bento Grid for social proof and gesture-based sliders.
+- **Advanced SEO & Tracking:** Ensuring the visual flair didn't harm indexing, implementing robust metadata and native integration with Google Analytics 4 and Vercel Analytics.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Design System"
+    description="A identidade visual adota o conceito de 'Deep Cosmos', usando fundos ultra escuros em contraste com tokens em neon/esmeralda (var(--accent)), além de utilitários customizados de Glassmorphism."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Design System"
+    description="The visual identity adopts the 'Deep Cosmos' concept, using ultra-dark backgrounds contrasted with neon/emerald tokens (var(--accent)), alongside custom Glassmorphism utilities."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Core", "Next.js (App Router), TypeScript"],
+      ["Estilização", "Tailwind CSS"],
+      ["Smooth Scroll", "Lenis (@studio-freight/react-lenis)"],
+      ["Animações", "Framer Motion"],
+      ["Monitoramento", "Vercel Analytics, Google Analytics 4"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Inércia Global e Animações
+  
+  Para alcançar a "experiência imersiva", combinamos o `Lenis Scroll` para a física da página com o `Framer Motion` para interações focadas. Criamos um Provider de inércia global que intercepta a rolagem nativa e aplica um *lerp* (interpolação linear) suave, enquanto mantém a acessibilidade do `smoothWheel`.
+</Pt>
+
+<En>
+  ## Technical Highlight: Global Inertia and Animations
+  
+  To achieve the "immersive experience", we combined `Lenis Scroll` for page physics with `Framer Motion` for focused interactions. We created a global inertia Provider that intercepts native scrolling and applies a smooth *lerp* (linear interpolation), while maintaining `smoothWheel` accessibility.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `'use client';
+
+import { ReactLenis } from '@studio-freight/react-lenis';
+import { ReactNode } from 'react';
+
+interface SmoothScrollProps {
+  children: ReactNode;
+}
+
+export function SmoothScroll({ children }: SmoothScrollProps) {
+  return (
+    <ReactLenis
+      root
+      options={{
+        lerp: 0.08,
+        duration: 1.5,
+        smoothWheel: true,
+        orientation: 'vertical',
+      }}
+    >
+      {children}
+    </ReactLenis>
+  );
+}`,
+language: "tsx",
+label: "SmoothScroll.tsx",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O **Stratos** provou que é possível construir templates extremamente animados sem sacrificar o desempenho Core Web Vitals. O carregamento da página permaneceu rápido devido à arquitetura de *Server Components* do Next.js App Router, delegando o peso das animações apenas para os *Client Components* estritamente necessários.
+
+O maior desafio técnico foi garantir que o Bento Grid e os *Magnetic Buttons* funcionassem perfeitamente em dispositivos móveis (*Mobile-First real*), ajustando *hitboxes* e cancelando eventos de inércia que pudessem conflitar com o toque dos dedos nativo do iOS e Android.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+**Stratos** proved that it is possible to build heavily animated templates without sacrificing Core Web Vitals performance. Page loading remained fast due to the Next.js App Router's *Server Components* architecture, offloading the weight of animations only to strictly necessary *Client Components*.
+
+The biggest technical challenge was ensuring the Bento Grid and Magnetic Buttons worked flawlessly on mobile devices (true *Mobile-First*), adjusting hitboxes and canceling inertia events that could conflict with native iOS and Android touch interactions.
+</En>
