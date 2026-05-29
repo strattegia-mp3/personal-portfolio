@@ -1,0 +1,150 @@
+---
+title: "VortexUI"
+title_pt: "VortexUI: Squeeze Page Premium"
+title_en: "VortexUI: Premium Squeeze Page"
+publishedAt: "2024-09-20"
+summary: "High-conversion premium squeeze page built with Next.js 15, Tailwind v4, and strict form validation."
+summary_pt: "Squeeze page premium de alta conversão construída com Next.js 15, Tailwind v4 e validação estrita."
+summary_en: "High-conversion premium squeeze page built with Next.js 15, Tailwind v4, and strict form validation."
+images:
+  - "/images/projects/vortexui/vortexui_og.webp"
+  - "/images/projects/vortexui/vortexui-hero_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Creator & Lead Developer"
+    avatar: "/images/avatars/victor.webp"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://vortexui-delta.vercel.app"
+repository: "https://github.com/strattegia-mp3/vortexui"
+tag: "Frontend Premium"
+tag_pt: "Frontend Premium"
+tag_en: "Frontend Premium"
+---
+
+<Pt>
+  ## O Desafio
+
+O desenvolvimento de Squeeze Pages frequentemente esbarra em dois problemas: código espaguete devido à pressa e baixa performance causada pelo excesso de scripts de rastreamento.
+
+O objetivo do **VortexUI** foi criar um template focado em *alta conversão*, estética premium em tons de púrpura e, acima de tudo, uma **arquitetura limpa (Separation of Concerns)**. Os principais requisitos foram:
+
+- **UX Impecável:** Transições fluidas de Light/Dark Mode sem o temido FOUC (Flicker of Unstyled Content).
+- **Formulário à Prova de Falhas:** Validação em duas etapas (Cliente e Servidor) com feedbacks visuais claros e precisos.
+- **Performance Extrema:** Otimização para métricas do Core Web Vitals (PageSpeed 95+), sem Layout Shifts e com rastreamento assíncrono.
+</Pt>
+
+<En>
+  ## The Challenge
+
+The development of Squeeze Pages often runs into two problems: spaghetti code due to rush, and poor performance caused by excessive tracking scripts.
+
+The goal of **VortexUI** was to create a template focused on *high conversion*, a premium aesthetic in purple tones, and above all, a **clean architecture (Separation of Concerns)**. The main requirements were:
+
+- **Flawless UX:** Fluid Light/Dark Mode transitions without the dreaded FOUC (Flicker of Unstyled Content).
+- **Bulletproof Form:** Two-step validation (Client and Server) with clear and precise visual feedback.
+- **Extreme Performance:** Optimization for Core Web Vitals metrics (PageSpeed 95+), with zero Layout Shifts and asynchronous tracking.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Tailwind CSS v4 & Tema Dinâmico"
+    description="Em vez de poluir o HTML com classes dark:* repetitivas, implementamos uma arquitetura CSS-first usando o @theme do Tailwind v4, gerenciando fundos e textos através de variáveis CSS nativas injetadas dinamicamente."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Tailwind CSS v4 & Dynamic Theme"
+    description="Instead of polluting the HTML with repetitive dark:* classes, we implemented a CSS-first architecture using Tailwind v4's @theme, managing backgrounds and texts through dynamically injected native CSS variables."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework", "Next.js 15 (App Router, Serverless)"],
+      ["Estilização", "Tailwind CSS v4"],
+      ["Animações", "Framer Motion v11"],
+      ["Formulários & Validação", "React Hook Form + Zod"],
+      ["Monitoramento & SEO", "Google Analytics 4, JSON-LD"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Fluxo de Captura de Leads Isolado
+  
+  O componente de formulário foi totalmente isolado da lógica de negócio. Utilizamos `React Hook Form` para estados complexos (idle, submitting, success, error) e executamos a validação de esquema com `Zod` tanto no `onBlur` do cliente quanto no Route Handler do servidor (`/api/leads`). Somente após o sucesso dessa validação rigorosa, disparamos o evento `generate_lead` no GA4.
+</Pt>
+
+<En>
+  ## Technical Highlight: Isolated Lead Capture Flow
+  
+  The form component was completely isolated from the business logic. We used `React Hook Form` for complex states (idle, submitting, success, error) and performed schema validation with `Zod` both on the client's `onBlur` and the server's Route Handler (`/api/leads`). Only after this rigorous validation succeeds do we trigger the `generate_lead` GA4 event.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `// Route Handler de Exemplo (app/api/leads/route.ts)
+import { NextResponse } from 'next/server';
+import { z } from 'zod';
+
+const leadSchema = z.object({
+  name: z.string().min(2, 'Nome muito curto'),
+  email: z.string().email('E-mail inválido'),
+});
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json();
+    
+    // Validação estrita no servidor (Segunda etapa)
+    const parsedData = leadSchema.parse(body);
+    
+    // Lógica de persistência mockada...
+    // await persistLead(parsedData);
+
+    return NextResponse.json(
+      { success: true, message: 'Lead gerado com sucesso.' },
+      { status: 201 }
+    );
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, errors: error.errors },
+        { status: 422 } // Unprocessable Entity
+      );
+    }
+    return NextResponse.json({ success: false }, { status: 500 });
+  }
+}`,
+language: "typescript",
+label: "api/leads/route.ts",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O projeto atingiu notas máximas (95+) no PageSpeed Insights. A decisão de baixar e hospedar localmente as fontes *Sora* e *DM Sans* eliminou completamente o Cumulative Layout Shift (CLS) no carregamento inicial.
+
+O aprendizado técnico mais profundo foi a injeção nativa de SEO com `Structured Data (JSON-LD)` diretamente no layout, mapeando corretamente entidades complexas para os algoritmos de Rich Snippets do Google, sem comprometer o tempo de resposta do servidor da Vercel.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The project achieved top scores (95+) on PageSpeed Insights. The decision to download and locally host the *Sora* and *DM Sans* fonts completely eliminated Cumulative Layout Shift (CLS) on initial load.
+
+The deepest technical takeaway was the native SEO injection with `Structured Data (JSON-LD)` directly in the layout, correctly mapping complex entities for Google's Rich Snippet algorithms, without compromising Vercel's server response time.
+</En>
