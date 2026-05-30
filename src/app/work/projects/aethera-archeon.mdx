@@ -1,0 +1,141 @@
+---
+title: "Aethera Archeon"
+title_pt: "Aethera Archeon: Landing Page Premium"
+title_en: "Aethera Archeon: Premium Landing Page"
+publishedAt: "2026-05-29"
+summary: "High-end architecture landing page template featuring scalable white-label architecture and refined motion design."
+summary_pt: "Template de landing page de alto padrão para arquitetura com arquitetura white-label escalável e motion design refinado."
+summary_en: "High-end architecture landing page template featuring scalable white-label architecture and refined motion design."
+images:
+  - "/images/projects/aethera-archeon/aethera_og.webp"
+  - "/images/projects/aethera-archeon/aethera-hero_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Creator & Lead Developer"
+    avatar: "/images/avatars/victor.webp"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://aethera-archeon.vercel.app/"
+repository: "https://github.com/strattegia-mp3/aethera-archeon"
+tag: "Frontend Premium"
+tag_pt: "Frontend Premium"
+tag_en: "Frontend Premium"
+---
+
+<Pt>
+  ## O Desafio
+
+Marcas do segmento de arquitetura e design de interiores de luxo exigem uma presença digital que reflita sua sofisticação e atenção aos detalhes. O desafio com o **Aethera Archeon** foi criar não apenas uma interface esteticamente impecável, mas uma fundação técnica escalável.
+
+Os principais requisitos do projeto foram:
+- **Arquitetura White-Label:** Capacidade de reaproveitar o template para diferentes escritórios com impacto estrutural mínimo.
+- **Experiência Visual Refinada:** Implementação de Dark/Light Mode fluida e animações de *scroll reveal* elegantes com Framer Motion.
+- **SEO Técnico Nativo:** Geração dinâmica de Sitemaps, Robots.txt e implementação de dados estruturados (JSON-LD).
+</Pt>
+
+<En>
+  ## The Challenge
+
+Brands in the luxury architecture and interior design segment require a digital presence that reflects their sophistication and attention to detail. The challenge with **Aethera Archeon** was to create not only an aesthetically flawless interface but a scalable technical foundation.
+
+Key project requirements included:
+- **White-Label Architecture:** The ability to repurpose the template for different studios with minimal structural impact.
+- **Refined Visual Experience:** Fluid Dark/Light Mode implementation and elegant scroll reveal animations with Framer Motion.
+- **Native Technical SEO:** Dynamic generation of Sitemaps, Robots.txt, and implementation of structured data (JSON-LD).
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Separação de Responsabilidades (SoC)"
+    description="Todo o conteúdo estratégico do site (textos, links, serviços e contatos) foi centralizado no arquivo lib/constants.ts, desacoplando completamente os dados da interface visual e facilitando a manutenção."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Separation of Concerns (SoC)"
+    description="All strategic site content (texts, links, services, and contacts) was centralized in the lib/constants.ts file, completely decoupling data from the visual interface and easing maintenance."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework", "Next.js 15 (App Router)"],
+      ["Linguagem", "TypeScript (Strict Mode)"],
+      ["Estilização & Tema", "Tailwind CSS v4, next-themes"],
+      ["Animações", "Framer Motion"],
+      ["Monitoramento", "Google Analytics 4 (@next/third-parties)"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Design System CSS-First
+  
+  Para garantir um sistema visual coeso e fácil personalização em cenários white-label, a paleta de cores e os tokens de design foram gerenciados diretamente no escopo global do CSS. Isso permite que a transição entre Light e Dark mode — ou a adaptação para as cores de uma nova marca — seja feita alterando apenas algumas variáveis, sem precisar refatorar componentes individuais.
+</Pt>
+
+<En>
+  ## Technical Highlight: CSS-First Design System
+  
+  To ensure a cohesive visual system and easy customization in white-label scenarios, the color palette and design tokens were managed directly in the global CSS scope. This allows the transition between Light and Dark mode—or adaptation to a new brand's colors—to be done by changing just a few variables, without needing to refactor individual components.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `/* app/globals.css - Arquitetura de Tema Escalável */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-background: #f4f3ef;
+    --color-foreground: #1c1d1a;
+    --color-gold: #b8975e;
+    --color-surface: #ffffff;
+  }
+
+  [data-theme="dark"] {
+    --color-background: #0d0e12;
+    --color-foreground: #e4e3df;
+    --color-gold: #c9a84c;
+    --color-surface: #14151a;
+  }
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}`,
+language: "css",
+label: "globals.css",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+A construção do **Aethera Archeon** provou que a combinação de tipagem forte (Strict TypeScript) com uma arquitetura modularizada resulta em aplicações altamente previsíveis e seguras. O projeto entrega notas de performance excelentes ao priorizar o Tree Shaking e carregar scripts de terceiros de forma otimizada.
+
+O principal aprendizado foi o aprofundamento na configuração de metadados dinâmicos e injeção nativa de SEO (`Schema.org`) no Next.js 15, garantindo que o template esteja preparado para rankeamento orgânico desde o dia zero da implantação.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+Building **Aethera Archeon** proved that combining strong typing (Strict TypeScript) with a modularized architecture results in highly predictable and secure applications. The project delivers excellent performance scores by prioritizing Tree Shaking and loading third-party scripts optimally.
+
+The main takeaway was diving deep into dynamic metadata configuration and native SEO injection (`Schema.org`) in Next.js 15, ensuring the template is ready for organic ranking from day zero of deployment.
+</En>
