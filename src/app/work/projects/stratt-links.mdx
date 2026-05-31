@@ -1,0 +1,141 @@
+---
+title: "stratt-links"
+title_pt: "stratt-links: Agregador de Links Premium"
+title_en: "stratt-links: Premium Link Aggregator"
+publishedAt: "2026-05-30"
+summary: "Premium micro landing page and link aggregator with a semantic design system and fluid UX-first animations."
+summary_pt: "Micro landing page e agregador de links premium com design system semântico e animações fluidas focadas em UX."
+summary_en: "Premium micro landing page and link aggregator with a semantic design system and fluid UX-first animations."
+images:
+  - "/images/projects/stratt-links/stratt-links_og.webp"
+  - "/images/projects/stratt-links/stratt-links-site_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Creator & Lead Developer"
+    avatar: "/images/avatars/victor.webp"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://stratt-links.vercel.app/"
+repository: "https://github.com/strattegia-mp3/stratt-links"
+tag: "Frontend / UX"
+tag_pt: "Frontend / UX"
+tag_en: "Frontend / UX"
+---
+
+<Pt>
+  ## O Desafio
+
+O mercado está cheio de agregadores de links genéricos que falham em transmitir a percepção de alto valor de um profissional ou marca. 
+
+O objetivo com o **stratt-links** foi construir uma *Micro Landing Page* premium e minimalista. Os pilares do projeto foram:
+- **Separação Rigorosa (Data Decoupling):** Permitir que o usuário atualize links, textos e imagens em menos de 2 minutos sem tocar em nenhum componente visual (JSX).
+- **UX Impecável:** Transições com física de molas (*springs*) e efeitos 3D que elevam a percepção de valor sem causar fadiga visual.
+- **Design Semântico:** Eliminar a poluição de classes `dark:` no código, utilizando o novo motor do Tailwind CSS v4 para gerenciar o suporte a *Light/Dark mode* nativamente no CSS.
+</Pt>
+
+<En>
+  ## The Challenge
+
+The market is flooded with generic link aggregators that fail to convey the high-value perception of a professional or brand.
+
+The goal with **stratt-links** was to build a premium, minimalist *Micro Landing Page*. The project pillars were:
+- **Strict Data Decoupling:** Allowing users to update links, texts, and images in under 2 minutes without touching any visual components (JSX).
+- **Flawless UX:** Transitions with spring physics and 3D effects that elevate perceived value without causing visual fatigue.
+- **Semantic Design:** Eliminating the pollution of `dark:` classes in the code by using the new Tailwind CSS v4 engine to manage *Light/Dark mode* support natively via CSS.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="Arquitetura de Dados"
+    description="Toda a configuração estratégica da página foi isolada no arquivo src/data/linksData.ts. A renderização acontece de forma dinâmica, transformando o projeto em um template altamente escalável."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="Data Architecture"
+    description="All strategic page configuration was isolated in the src/data/linksData.ts file. Rendering happens dynamically, turning the project into a highly scalable template."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework", "Next.js 15 (App Router)"],
+      ["Estilização", "Tailwind CSS v4"],
+      ["Gerenciamento de Tema", "next-themes (Sem FOUC)"],
+      ["Animações", "Framer Motion 11"],
+      ["Ícones", "Lucide React, React Icons"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Desacoplamento e Tipagem Estrita
+  
+  Para garantir que a personalização do portfólio fosse à prova de erros, implementamos um arquivo central de dados fortemente tipado. O TypeScript valida se as variantes dos botões (como `primary` ou `accent`) e os caminhos dos links estão corretos antes mesmo da compilação.
+</Pt>
+
+<En>
+  ## Technical Highlight: Decoupling and Strict Typing
+  
+  To ensure portfolio customization was error-proof, we implemented a strongly typed central data file. TypeScript validates if button variants (like `primary` or `accent`) and link paths are correct even before compilation.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `// src/data/linksData.ts
+import { ProfileData, LinkItem } from '@/types';
+
+export const profile: ProfileData = {
+  name: 'Victor Rocha',
+  role: 'Software Engineer & UI Designer',
+  bio: 'Criando experiências digitais premium e performáticas.',
+  avatarUrl: '/images/avatar.jpg',
+};
+
+export const mainLinks: LinkItem[] = [
+  {
+    id: 'portfolio',
+    title: 'Acessar Portfólio',
+    url: 'https://seusite.com',
+    variant: 'primary', // Tipado para aceitar apenas valores específicos do Design System
+    icon: 'Briefcase',
+  },
+  {
+    id: 'github',
+    title: 'Github',
+    url: 'https://github.com/strattegia-mp3',
+    variant: 'secondary',
+    icon: 'Github',
+  },
+];`,
+language: "typescript",
+label: "linksData.ts",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+O projeto resultou em uma aplicação que se comporta como um *App Nativo*, com PWA (Progressive Web App) configurado e cores de manifesto ajustadas para transições suaves em dispositivos móveis. A atenção à acessibilidade garantiu que as cores tivessem o contraste cirurgicamente calculado para ambos os temas.
+
+O grande aprendizado foi equilibrar o uso de **Framer Motion** para o efeito interativo de *tilt 3D* nos links e o radar pulsante do botão de WhatsApp, mantendo a responsividade impecável e notas máximas de performance na Vercel.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The project resulted in an application that behaves like a *Native App*, with PWA (Progressive Web App) configured and manifest colors adjusted for smooth transitions on mobile devices. The attention to accessibility ensured that colors had surgically calculated contrast for both themes.
+
+The main takeaway was balancing the use of **Framer Motion** for the interactive 3D tilt effect on the links and the pulsing radar on the WhatsApp button, while maintaining flawless responsiveness and top performance scores on Vercel.
+</En>
