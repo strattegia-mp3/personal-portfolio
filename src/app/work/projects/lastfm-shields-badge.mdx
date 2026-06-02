@@ -1,0 +1,147 @@
+---
+title: "Last.fm Shields Badge"
+title_pt: "Last.fm Badge: API Serverless"
+title_en: "Last.fm Badge: Serverless API"
+publishedAt: "2026-05-30"
+summary: "Serverless API to fetch Last.fm scrobbles and generate dynamic Shields.io badges for GitHub profiles."
+summary_pt: "API Serverless para buscar scrobbles do Last.fm e gerar badges dinâmicos do Shields.io para perfis do GitHub."
+summary_en: "Serverless API to fetch Last.fm scrobbles and generate dynamic Shields.io badges for GitHub profiles."
+images:
+  - "/images/projects/lastfm-badge/lastfm-badge_og.webp"
+  - "/images/projects/lastfm-badge/lastfm-badge-hero_og.webp"
+team:
+  - name: "Victor Rocha"
+    role: "Creator & Lead Developer"
+    avatar: "/images/avatars/victor.webp"
+    linkedIn: "https://linkedin.com/in/victor-jrocha"
+link: "https://lastfm-shields-badge.vercel.app/"
+repository: "https://github.com/strattegia-mp3/lastfm-shields-badge"
+tag: "Backend / API"
+tag_pt: "Backend / API"
+tag_en: "Backend / API"
+---
+
+<Pt>
+  ## O Desafio
+
+Desenvolvedores adoram personalizar seus arquivos `README.md` no GitHub com estatísticas em tempo real. No entanto, integrar a API do Last.fm diretamente em um badge estático exige uma camada intermediária que formate os dados adequadamente e lide com sistemas de cache agressivos.
+
+O objetivo do **Last.fm Shields Badge** foi construir uma API Serverless ultrarrápida combinada com uma Landing Page moderna. Os focos foram:
+- **Integração Shields.io:** Fornecer um endpoint JSON perfeitamente formatado para o padrão de badges dinâmicos do Shields.io.
+- **Bypass de Cache (GitHub Camo):** Garantir que a contagem de *scrobbles* (músicas ouvidas) atualize quase em tempo real, contornando o proxy de imagens estáticas do GitHub.
+- **UI Premium:** Uma página de apresentação minimalista com suporte nativo a internacionalização (i18n) e efeitos *glassmorphism*.
+</Pt>
+
+<En>
+  ## The Challenge
+
+Developers love customizing their GitHub `README.md` files with real-time statistics. However, integrating the Last.fm API directly into a static badge requires an intermediary layer to format the data properly and handle aggressive caching systems.
+
+The goal of the **Last.fm Shields Badge** was to build an ultra-fast Serverless API combined with a modern Landing Page. The focuses were:
+- **Shields.io Integration:** Providing a perfectly formatted JSON endpoint for the Shields.io dynamic badge standard.
+- **Cache Bypass (GitHub Camo):** Ensuring the *scrobbles* (listened tracks) count updates in near real-time, bypassing GitHub's static image proxy.
+- **Premium UI:** A minimalist presentation page with native internationalization (i18n) support and glassmorphism effects.
+</En>
+
+<Pt>
+  <Feedback
+    variant="info"
+    title="O Problema do Cache no GitHub"
+    description="O GitHub utiliza um proxy chamado Camo para armazenar imagens em cache. Para garantir que o badge de scrobbles seja atualizado continuamente, a API precisa injetar cabeçalhos estritos de Cache-Control (como s-maxage e stale-while-revalidate)."
+  />
+</Pt>
+
+<En>
+  <Feedback
+    variant="info"
+    title="The GitHub Cache Problem"
+    description="GitHub uses a proxy called Camo to cache images. To ensure the scrobbles badge updates continuously, the API must inject strict Cache-Control headers (like s-maxage and stale-while-revalidate)."
+  />
+</En>
+
+## Tech Stack
+
+<Table
+  data={{
+    headers: [
+      { content: "Categoria", key: "col1" },
+      { content: "Tecnologia", key: "col2" },
+    ],
+    rows: [
+      ["Framework & API", "Next.js 15 (App Router, Serverless)"],
+      ["Integração Externa", "Last.fm API, Shields.io"],
+      ["Estilização", "Tailwind CSS v4"],
+      ["Linguagem", "TypeScript (Strict Mode)"],
+      ["Deploy & Edge", "Vercel"],
+    ],
+  }}
+/>
+
+<Pt>
+  ## Destaque Técnico: Route Handlers e Formatação de Endpoint
+  
+  A lógica central do projeto reside em um Route Handler do Next.js. Ele atua como um *proxy* reverso: consome de forma segura a chave da API do Last.fm (escondida no servidor), extrai os dados do usuário e devolve um objeto JSON com as propriedades `schemaVersion`, `label`, `message` e `color`, exatamente como a documentação do Shields.io exige para badges customizados.
+</Pt>
+
+<En>
+  ## Technical Highlight: Route Handlers and Endpoint Formatting
+  
+  The core logic of the project resides in a Next.js Route Handler. It acts as a reverse *proxy*: it securely consumes the Last.fm API key (hidden on the server), extracts the user data, and returns a JSON object with the properties `schemaVersion`, `label`, `message`, and `color`, exactly as the Shields.io documentation requires for custom badges.
+</En>
+
+<CodeBlock
+  codes={[
+    {
+      code: `// app/api/scrobbles/route.ts
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const user = searchParams.get('user') || process.env.LASTFM_USER;
+  const apiKey = process.env.LASTFM_API_KEY;
+
+  try {
+    const response = await fetch(
+      \`https://ws.audioscrobbler.com/2.0/?method=user.getinfo&user=\${user}&api_key=\${apiKey}&format=json\`,
+      { next: { revalidate: 60 } }
+    );
+    
+    const data = await response.json();
+    const playcount = data.user.playcount;
+
+    // Formato exigido pelo Shields.io Endpoint
+    return NextResponse.json({
+      schemaVersion: 1,
+      label: 'scrobbles',
+      message: new Intl.NumberFormat('en-US').format(playcount),
+      color: 'd51007',
+    }, {
+      headers: {
+        'Cache-Control': 'max-age=0, s-maxage=60, stale-while-revalidate=30',
+      },
+    });
+  } catch (error) {
+    return NextResponse.json({ error: 'Failed to fetch' }, { status: 500 });
+  }
+}`,
+language: "typescript",
+label: "api/scrobbles/route.ts",
+},
+]}
+/>
+
+<Pt>
+  ## Resultado e Aprendizados
+
+A API Serverless atingiu tempos de resposta da ordem de milissegundos, processando e formatando os dados de forma transparente. A adição da interface da Landing Page em **Tailwind v4** trouxe uma camada de profissionalismo a um projeto que, inicialmente, seria apenas um script de backend.
+
+O principal aprendizado foi a manipulação avançada de cabeçalhos HTTP (`Cache-Control`) para lidar com proxies agressivos de terceiros, garantindo que a infraestrutura da Vercel entregasse performance sem sacrificar a atualização em tempo real dos dados.
+</Pt>
+
+<En>
+  ## Results and Key Learnings
+
+The Serverless API achieved millisecond response times, processing and formatting the data seamlessly. Adding the Landing Page interface using **Tailwind v4** brought a layer of professionalism to a project that initially was just going to be a backend script.
+
+The main takeaway was the advanced manipulation of HTTP headers (`Cache-Control`) to handle aggressive third-party proxies, ensuring Vercel's infrastructure delivered performance without sacrificing real-time data updates.
+</En>
