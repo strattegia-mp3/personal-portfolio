@@ -266,7 +266,7 @@ export const en: ContentTranslation = {
     title: "Articles & Thoughts",
     seoTitle: "Blog | Victor Rocha",
     description:
-      "A space where I share learnings on technology, career, and the future of innovation.",
+      "A space where I share my general thoughts and learnings.",
   },
   work: {
     path: PATHS.work,

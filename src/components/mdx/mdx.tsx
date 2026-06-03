@@ -26,6 +26,7 @@ import {
 
 import { HeadingLink } from "@/components/HeadingLink";
 import { Pt, En } from "@/components/mdx/LanguageWrapper";
+import { Figure } from "@/components/mdx/Figure";
 
 function extractText(node: ReactNode): string {
   if (typeof node === "string") return node;
@@ -244,6 +245,7 @@ const components = {
   Line,
   Pt,
   En,
+  Figure,
 };
 
 type CustomMDXProps = MDXRemoteProps & {
