@@ -28,10 +28,6 @@
   cursor: zoom-in;
   position: relative;
 
-  /* Fade-in inicial usando translate3d para GPU acceleration */
-  opacity: 0;
-  transform: translate3d(0, 24px, 0) scale3d(0.96, 0.96, 1);
-
   /* stagger via CSS custom property --i */
   transition:
     opacity 0.6s var(--ease-fluid) calc(var(--i, 0) * 0.05s),
@@ -48,13 +44,6 @@
     opacity: 1;
     transform: none;
   }
-}
-
-/* Trigger the animation once image is loaded */
-.itemLoaded {
-  opacity: 1;
-  transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
-  will-change: auto;
 }
 
 /* ── Image wrapper with fixed aspect-ratio ── */
