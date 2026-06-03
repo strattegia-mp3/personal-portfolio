@@ -15,6 +15,7 @@ import {
 import { baseURL, about, blog, person } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { getPosts } from "@/utils/utils";
+import { generateOGUrl } from "@/utils/generateOGUrl";
 import { Metadata } from "next";
 import React from "react";
 import { Posts } from "@/components/blog/Posts";
@@ -55,7 +56,13 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image: post.metadata.image || OG_FALLBACK,
+    image: generateOGUrl({
+      baseURL,
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      type: "blog",
+      tag: post.metadata.tag,
+    }),
     path: `${blog.path}/${post.slug}`,
   });
 }

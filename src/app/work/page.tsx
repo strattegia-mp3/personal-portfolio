@@ -2,6 +2,7 @@ import { getPosts } from "@/utils/utils";
 import { baseURL, work } from "@/resources";
 import { Meta } from "@once-ui-system/core";
 import WorkView from "@/views/WorkView";
+import { generateOGUrl } from "@/utils/generateOGUrl";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -9,7 +10,12 @@ export async function generateMetadata() {
     description: work.description,
     baseURL: baseURL,
     path: work.path,
-    image: "/images/og/about.webp",
+    image: generateOGUrl({
+      baseURL,
+      title: work.title,
+      description: work.description,
+      type: "page",
+    }),
   });
 }
 

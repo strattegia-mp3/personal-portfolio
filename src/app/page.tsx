@@ -2,8 +2,7 @@ import { getPosts } from "@/utils/utils";
 import HomeView from "@/views/HomeView";
 import { home, baseURL, person, about } from "@/resources";
 import { Meta, Schema } from "@once-ui-system/core";
-
-const OG_IMAGE = "/images/og/about.webp";
+import { generateOGUrl } from "@/utils/generateOGUrl";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -11,7 +10,12 @@ export async function generateMetadata() {
     description: home.description,
     baseURL,
     path: home.path,
-    image: OG_IMAGE,
+    image: generateOGUrl({
+      baseURL,
+      title: home.title,
+      description: home.description,
+      type: "page",
+    }),
   });
 }
 
@@ -31,13 +35,20 @@ export default function Home() {
       new Date(a.metadata.publishedAt).getTime(),
   );
 
+  const ogImage = generateOGUrl({
+    baseURL,
+    title: home.title,
+    description: home.description,
+    type: "page",
+  });
+
   const jsonLd = {
     as: "webPage" as "webPage",
     baseURL: baseURL,
     path: home.path,
     title: home.title,
     description: home.description,
-    image: OG_IMAGE,
+    image: ogImage,
     author: {
       name: person.name,
       url: `${baseURL}${about.path}`,

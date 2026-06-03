@@ -14,6 +14,7 @@ import {
 import { baseURL, about, person, work } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
+import { generateOGUrl } from "@/utils/generateOGUrl";
 import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 import { DynamicTitle } from "@/components/mdx/DynamicTitle";
@@ -52,7 +53,13 @@ export async function generateMetadata({
     title: post.metadata.title,
     description: post.metadata.summary,
     baseURL: baseURL,
-    image: post.metadata.images?.[0] || OG_FALLBACK,
+    image: generateOGUrl({
+      baseURL,
+      title: post.metadata.title,
+      description: post.metadata.summary,
+      type: "work",
+      tag: post.metadata.tag,
+    }),
     path: `${work.path}/${post.slug}`,
   });
 }

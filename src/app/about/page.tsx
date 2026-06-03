@@ -1,8 +1,7 @@
 import { about, baseURL } from "@/resources";
 import { Meta } from "@once-ui-system/core";
 import AboutView from "@/views/AboutView";
-
-const OG_IMAGE = "/images/og/about.webp";
+import { generateOGUrl } from "@/utils/generateOGUrl";
 
 export async function generateMetadata() {
   return Meta.generate({
@@ -10,7 +9,12 @@ export async function generateMetadata() {
     description: about.description,
     path: about.path,
     baseURL: baseURL,
-    image: OG_IMAGE,
+    image: generateOGUrl({
+      baseURL,
+      title: about.title,
+      description: about.description,
+      type: "page",
+    }),
   });
 }
 
