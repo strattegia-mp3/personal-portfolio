@@ -27,6 +27,7 @@ interface PostsProps {
   thumbnail?: boolean;
   direction?: "row" | "column";
   exclude?: string[];
+  showDate?: boolean;
 }
 
 export function Posts({
@@ -36,6 +37,7 @@ export function Posts({
   thumbnail = false,
   exclude = [],
   direction,
+  showDate = true,
 }: PostsProps) {
   const safePosts = posts || [];
 
@@ -74,6 +76,7 @@ export function Posts({
               thumbnail={thumbnail}
               direction={direction}
               priority={idx === 0 && thumbnail}
+              showDate={showDate}
             />
           ))}
         </Grid>

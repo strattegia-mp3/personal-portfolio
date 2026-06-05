@@ -115,6 +115,7 @@ export default async function RootLayout({
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
+        <link rel="preload" as="image" href="/images/avatars/victor.webp" />
       </head>
       <Providers>
         <LanguageProvider>

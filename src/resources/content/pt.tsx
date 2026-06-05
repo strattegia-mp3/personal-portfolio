@@ -262,6 +262,31 @@ export const pt: ContentTranslation = {
         },
       ],
     },
+    github: {
+      display: true,
+      username: "strattegia-mp3",
+      title: "Atividade no GitHub",
+      contributions: "contribuições no último ano",
+      repos: "Repositórios em Destaque",
+      stars: "estrelas",
+      forks: "forks",
+      noDesc: "Sem descrição disponível.",
+      error: "Não foi possível carregar dados do GitHub.",
+      viewAll: "Ver todos no GitHub",
+      less: "Menos",
+      more: "Mais",
+      contribTooltip: (n: number, d: string) => {
+        const formattedDate = new Intl.DateTimeFormat("pt-BR", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }).format(new Date(d));
+
+        return n === 0
+          ? `Nenhuma contribuição em ${formattedDate}`
+          : `${n} contribuiç${n === 1 ? "ão" : "ões"} em ${formattedDate}`;
+      },
+    },
   },
   blog: {
     path: PATHS.blog,

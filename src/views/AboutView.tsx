@@ -20,6 +20,12 @@ import { useLanguage } from "@/components/LanguageContext";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import dynamic from "next/dynamic";
+
+const GitHubActivity = dynamic(
+  () => import("@/components/github/GitHubActivity"),
+  { ssr: false },
+);
 
 const OG_IMAGE = "/images/og/about.webp";
 
@@ -48,6 +54,11 @@ export default function AboutView() {
       display: about.technical.display,
       items: about.technical.skills.map((skill) => skill.title),
     },
+    {
+      title: about.github.title,
+      display: about.github.display,
+      items: [],
+    },
   ];
 
   return (
@@ -57,6 +68,42 @@ export default function AboutView() {
         titleEn="About | Victor Rocha"
         fallback="Victor Rocha"
       />
+      <style>{`
+      @keyframes heroFadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero-item,
+      .section-fade {
+        animation: heroFadeUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+        will-change: transform, opacity;
+      }
+
+      .hero-item-0 { animation-delay: 0ms; }
+      .hero-item-1 { animation-delay: 60ms; }
+      .hero-item-2 { animation-delay: 120ms; }
+
+      .section-delay-1 { animation-delay: 50ms; }
+      .section-delay-2 { animation-delay: 100ms; }
+      .section-delay-3 { animation-delay: 150ms; }
+      .section-delay-4 { animation-delay: 200ms; }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hero-item,
+        .section-fade {
+          animation: none;
+          opacity: 1;
+          transform: none;
+        }
+      }
+      `}</style>
       <Schema
         as="webPage"
         baseURL={baseURL}
@@ -78,7 +125,7 @@ export default function AboutView() {
       <Row fillWidth s={{ direction: "column" }} horizontal="center">
         {about.avatar.display && (
           <Column
-            className={styles.avatar}
+            className={`${styles.avatar} hero-item hero-item-0`}
             top="64"
             fitHeight
             position="sticky"
@@ -156,7 +203,6 @@ export default function AboutView() {
               {person.role}
             </Text>
 
-            {/* Social Links Dinâmicos */}
             {social.length > 0 && (
               <Row
                 className={styles.blockAlign}
@@ -203,6 +249,7 @@ export default function AboutView() {
 
           {about.intro.display && (
             <Column
+              className="hero-item hero-item-2"
               textVariant="body-default-l"
               fillWidth
               gap="m"
@@ -213,12 +260,12 @@ export default function AboutView() {
           )}
 
           {about.work.display && (
-            <>
+            <Column id={about.work.title} fillWidth>
               <Heading
                 as="h2"
-                id={about.work.title}
                 variant="display-strong-s"
                 marginBottom="m"
+                className="section-fade"
               >
                 {about.work.title}
               </Heading>
@@ -227,6 +274,7 @@ export default function AboutView() {
                   <Column
                     key={`${experience.company}-${experience.role}-${index}`}
                     fillWidth
+                    className={`section-fade section-delay-${Math.min(index + 1, 4)}`}
                   >
                     <Row
                       fillWidth
@@ -253,11 +301,11 @@ export default function AboutView() {
                     </Text>
                     <Column as="ul" gap="16">
                       {experience.achievements.map(
-                        (achievement: React.ReactNode, index: number) => (
+                        (achievement: React.ReactNode, i: number) => (
                           <Text
                             as="li"
                             variant="body-default-m"
-                            key={`${experience.company}-${index}`}
+                            key={`${experience.company}-${i}`}
                           >
                             {achievement}
                           </Text>
@@ -272,9 +320,9 @@ export default function AboutView() {
                         gap="12"
                         wrap
                       >
-                        {experience.images.map((image, index) => (
+                        {experience.images.map((image, i) => (
                           <Row
-                            key={index}
+                            key={i}
                             border="neutral-medium"
                             radius="m"
                             minWidth={image.width}
@@ -294,16 +342,16 @@ export default function AboutView() {
                   </Column>
                 ))}
               </Column>
-            </>
+            </Column>
           )}
 
           {about.studies.display && (
-            <>
+            <Column id={about.studies.title} fillWidth>
               <Heading
                 as="h2"
-                id={about.studies.title}
                 variant="display-strong-s"
                 marginBottom="m"
+                className="section-fade"
               >
                 {about.studies.title}
               </Heading>
@@ -313,6 +361,7 @@ export default function AboutView() {
                     key={`${institution.name}-${index}`}
                     fillWidth
                     gap="4"
+                    className={`section-fade section-delay-${Math.min(index + 1, 4)}`}
                   >
                     <Text id={institution.name} variant="heading-strong-l">
                       {institution.name}
@@ -326,22 +375,27 @@ export default function AboutView() {
                   </Column>
                 ))}
               </Column>
-            </>
+            </Column>
           )}
 
           {about.technical.display && (
-            <>
+            <Column id={about.technical.title} fillWidth>
               <Heading
                 as="h2"
-                id={about.technical.title}
                 variant="display-strong-s"
                 marginBottom="40"
+                className="section-fade"
               >
                 {about.technical.title}
               </Heading>
-              <Column fillWidth gap="l">
+              <Column fillWidth gap="l" marginBottom="40">
                 {about.technical.skills.map((skill, index) => (
-                  <Column key={`${skill.title}-${index}`} fillWidth gap="4">
+                  <Column
+                    key={`${skill.title}-${index}`}
+                    fillWidth
+                    gap="4"
+                    className={`section-fade section-delay-${Math.min(index + 1, 4)}`}
+                  >
                     <Text id={skill.title} variant="heading-strong-l">
                       {skill.title}
                     </Text>
@@ -363,9 +417,9 @@ export default function AboutView() {
                     )}
                     {skill.images && skill.images.length > 0 && (
                       <Row fillWidth paddingTop="m" gap="12" wrap>
-                        {skill.images.map((image, index) => (
+                        {skill.images.map((image, i) => (
                           <Row
-                            key={index}
+                            key={i}
                             border="neutral-medium"
                             radius="m"
                             minWidth={image.width}
@@ -385,7 +439,15 @@ export default function AboutView() {
                   </Column>
                 ))}
               </Column>
-            </>
+            </Column>
+          )}
+
+          {about.github.display && (
+            <Column id={about.github.title} fillWidth marginBottom="xl">
+              <div className="section-fade section-delay-3">
+                <GitHubActivity />
+              </div>
+            </Column>
           )}
         </Column>
       </Row>

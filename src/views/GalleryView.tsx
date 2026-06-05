@@ -1,10 +1,14 @@
 "use client";
 
-// 1. Importe o RevealFx do @once-ui-system/core
-import { Media, MasonryGrid, Schema, RevealFx } from "@once-ui-system/core";
+import { Media, MasonryGrid, Schema } from "@once-ui-system/core";
 import { useLanguage } from "@/components/LanguageContext";
 import { baseURL } from "@/resources";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import dynamic from "next/dynamic";
+
+const RevealFx = dynamic(() =>
+  import("@once-ui-system/core").then((mod) => mod.RevealFx),
+);
 
 const OG_IMAGE = "/images/og/about.webp";
 
@@ -45,16 +49,17 @@ export default function GalleryView() {
           if (image.orientation === "horizontal") ratio = "4 / 3";
           if (image.orientation === "square") ratio = "1 / 1";
 
+          const cascadeDelay = 0.5 + (index % 3) * 0.1;
+
           return (
-            // 2. Envolva o Media com o RevealFx
             <RevealFx
               key={index}
-              translateY="16" // Deslocamento de baixo para cima (GPU accelerated)
-              delay={index * 0.1} // A mágica do stagger: cada imagem atrasa 50ms a mais
+              translateY="16"
+              delay={cascadeDelay}
             >
               <Media
                 enlarge
-                priority={index < 8}
+                priority={index < 6}
                 sizes="(max-width: 560px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 radius="l"
                 aspectRatio={ratio}

@@ -1,0 +1,47 @@
+/* ── Filter pills ───────────────────────────────────── */
+
+.pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid var(--scheme-border-neutral-weak);
+  background: transparent;
+  color: var(--scheme-text-neutral-medium);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  overflow: hidden;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
+
+  &:hover {
+    border-color: var(--scheme-border-neutral-medium);
+    color: var(--scheme-text-neutral-strong);
+  }
+}
+
+.pillActive {
+  border-color: var(--scheme-border-brand-medium) !important;
+  color: var(--scheme-text-brand-medium) !important;
+}
+
+/* Animated background highlight (layoutId shared) */
+.pillIndicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 100px;
+  background: var(--scheme-background-brand-weak);
+  z-index: -1;
+}
+
+/* ── Project list (layout animated by framer) ─────── */
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 0 var(--static-space-l, 24px) 40px;
+  width: 100%;
+}

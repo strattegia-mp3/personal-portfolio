@@ -211,6 +211,34 @@ export interface About extends BasePageConfig {
       }>;
     }>;
   };
+  github: {
+    /** Whether to display the GitHub section */
+    display: boolean;
+    /** Your exact GitHub username to build URLs */
+    username: string;
+    /** Title of the GitHub section */
+    title: string;
+    /** Label for contributions */
+    contributions: string;
+    /** Label for repositories */
+    repos: string;
+    /** Label for stars */
+    stars: string;
+    /** Label for forks */
+    forks: string;
+    /** Fallback text when a repository has no description */
+    noDesc: string;
+    /** Generic error message for GitHub data fetching */
+    error: string;
+    /** Label for the "View All" link */
+    viewAll: string;
+    /** Text for the "Less" legend label (e.g. "Less") */
+    less: string;
+    /** Text for the "More" legend label (e.g. "More") */
+    more: string;
+    /** Function that formats the tooltip text based on count and date */
+    contribTooltip: (n: number, d: string) => string;
+  };
 }
 
 /**
@@ -273,8 +301,157 @@ export interface Chat {
 }
 
 /**
-  * Global typing that combines all pages and settings 
-  * and defines the exact format of the language files (pt.tsx and en.tsx).
+ * Represents a single day of GitHub contributions.
+ * @description Dynamic Data & API (GitHub)
+ */
+export interface ContributionDay {
+  /** Number of contributions made on this day */
+  contributionCount: number;
+  /** Date of the contributions */
+  date: string;
+}
+
+/**
+ * Represents a week of GitHub contributions.
+ * @description Dynamic Data & API (GitHub)
+ */
+export interface Week {
+  /** List of contribution days within the week */
+  contributionDays: ContributionDay[];
+}
+
+/**
+ * Represents a GitHub repository.
+ * @description Dynamic Data & API (GitHub)
+ */
+export interface Repo {
+  /** Name of the repository */
+  name: string;
+  /** Description of the repository */
+  description: string | null;
+  /** URL of the repository */
+  url: string;
+  /** Number of stars the repository has */
+  stargazerCount: number;
+  /** Number of forks the repository has */
+  forkCount: number;
+  /** Primary programming language used in the repository */
+  primaryLanguage: {
+    /** Name of the language */
+    name: string;
+    /** Color hex code associated with the language */
+    color: string;
+  } | null;
+}
+
+/**
+ * GitHub data aggregated for display.
+ * @description Dynamic Data & API (GitHub)
+ */
+export interface GitHubData {
+  /** Total number of contributions in the given period */
+  totalContributions: number;
+  /** Weekly contribution data */
+  weeks: Week[];
+  /** List of repositories */
+  repos: Repo[];
+}
+
+/**
+ * Base metadata for MDX posts.
+ * @description MDX Posts Types (Blog & Projects)
+ */
+export interface BaseMetadata {
+  /** Primary title of the post */
+  title: string;
+  /** Portuguese title of the post */
+  title_pt?: string;
+  /** English title of the post */
+  title_en?: string;
+  /** Publication date */
+  publishedAt: string;
+  /** Primary summary of the post */
+  summary: string;
+  /** Portuguese summary of the post */
+  summary_pt?: string;
+  /** English summary of the post */
+  summary_en?: string;
+  /** Main image for the post */
+  image?: string;
+  /** Array of additional images */
+  images?: string[];
+  /** Primary tag or category */
+  tag?: string;
+  /** Portuguese tag or category */
+  tag_pt?: string;
+  /** English tag or category */
+  tag_en?: string;
+  /** Indicates if the post is a draft */
+  draft?: boolean;
+}
+
+/**
+ * Metadata specifically for project MDX posts.
+ * @description MDX Posts Types (Blog & Projects)
+ */
+export interface ProjectMetadata extends BaseMetadata {
+  /** Team members involved in the project */
+  team?: Array<{
+    /** Name of the team member */
+    name: string;
+    /** Role of the team member */
+    role: string;
+    /** URL to the avatar image */
+    avatar: string;
+    /** LinkedIn profile URL */
+    linkedIn: string;
+  }>;
+  /** External link to the live project */
+  link?: string;
+  /** URL to the project's source code repository */
+  repository?: string;
+}
+
+/**
+ * Represents a blog post parsed from MDX.
+ * @description MDX Posts Types (Blog & Projects)
+ */
+export interface PostData {
+  /** Unique slug for the post URL */
+  slug: string;
+  /** Metadata associated with the post */
+  metadata: BaseMetadata;
+  /** Raw or compiled MDX content */
+  content: string;
+}
+
+/**
+ * Represents a project post parsed from MDX.
+ * @description MDX Posts Types (Blog & Projects)
+ */
+export interface ProjectData {
+  /** Unique slug for the project URL */
+  slug: string;
+  /** Metadata associated with the project */
+  metadata: ProjectMetadata;
+  /** Raw or compiled MDX content */
+  content: string;
+}
+
+/**
+ * Properties for the PostViews component.
+ * @description Component props for tracking and displaying post views.
+ */
+export interface PostViewsProps {
+  /** Unique slug for the post URL */
+  slug: string;
+  /** If true, also fires a POST to increment the view count on mount */
+  track?: boolean;
+}
+
+/**
+ * Global typing that combines all pages and settings
+ * and defines the exact format of the language files (pt.tsx and en.tsx).
  */
 export type ContentTranslation = {
   person: Person;

@@ -2,6 +2,7 @@
 
 import { Card, Column, Media, Row, Avatar, Text } from "@once-ui-system/core";
 import { formatDate } from "@/utils/formatDate";
+import { readingTime } from "@/utils/readingTime";
 import { useLanguage } from "@/components/LanguageContext";
 import { PostData } from "./Posts";
 
@@ -10,6 +11,7 @@ interface PostProps {
   thumbnail: boolean;
   direction?: "row" | "column";
   priority?: boolean;
+  showDate?: boolean;
 }
 
 export default function Post({
@@ -17,6 +19,7 @@ export default function Post({
   thumbnail,
   direction,
   priority = false,
+  showDate = true,
 }: PostProps) {
   const { content, currentLanguage } = useLanguage();
   const { person } = content;
@@ -78,9 +81,18 @@ export default function Post({
               />
               <Text variant="label-default-s">{person.name}</Text>
             </Row>
-            <Text variant="body-default-xs" onBackground="neutral-weak">
-              {formatDate(post.metadata.publishedAt, false)}
-            </Text>
+
+            {showDate && (
+              <Text variant="body-default-xs" onBackground="neutral-weak">
+                {formatDate(post.metadata.publishedAt, false)}
+              </Text>
+            )}
+
+            {post.content && (
+              <Text variant="body-default-xs" onBackground="neutral-weak">
+                {readingTime(post.content)} min
+              </Text>
+            )}
           </Row>
 
           <Text variant="heading-strong-l" wrap="balance">

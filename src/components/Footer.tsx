@@ -39,7 +39,7 @@ export const Footer = () => {
         <Text variant="body-default-s" onBackground="neutral-strong">
           <Text onBackground="neutral-weak">© {currentYear} /</Text>
           <Text paddingX="4">{person.name}</Text>
-          <Text onBackground="neutral-weak">
+          <Text className={styles.builtWith} onBackground="neutral-weak">
             {/* Usage of this template requires attribution. Please don't remove the link to Once UI unless you have a Pro license. */}
             {texts[currentLanguage]}{" "}
             <SmartLink href="https://once-ui.com/products/magic-portfolio">
@@ -59,7 +59,7 @@ export const Footer = () => {
                   size="s"
                   variant="ghost"
                 />
-              )
+              ),
           )}
         </Row>
       </Row>

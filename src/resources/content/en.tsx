@@ -259,14 +259,38 @@ export const en: ContentTranslation = {
         },
       ],
     },
+    github: {
+      display: true,
+      username: "strattegia-mp3", // Seu username
+      title: "GitHub Activity",
+      contributions: "contributions in the last year",
+      repos: "Featured Repositories",
+      stars: "stars",
+      forks: "forks",
+      noDesc: "No description available.",
+      error: "Could not load GitHub data.",
+      viewAll: "View all on GitHub",
+      less: "Less",
+      more: "More",
+      contribTooltip: (n: number, d: string) => {
+        const formattedDate = new Intl.DateTimeFormat("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }).format(new Date(d));
+
+        return n === 0
+          ? `No contributions on ${formattedDate}`
+          : `${n} contribution${n === 1 ? "" : "s"} on ${formattedDate}`;
+      },
+    },
   },
   blog: {
     path: PATHS.blog,
     label: "Blog",
     title: "Articles & Thoughts",
     seoTitle: "Blog | Victor Rocha",
-    description:
-      "A space where I share my general thoughts and learnings.",
+    description: "A space where I share my general thoughts and learnings.",
   },
   work: {
     path: PATHS.work,

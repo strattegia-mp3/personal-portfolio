@@ -14,6 +14,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { routes } from "@/resources";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import type { PostData } from "@/components/blog/Posts";
 import type { ProjectData } from "@/components/work/Projects";
 
@@ -148,13 +149,20 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
             >
               <Row gap="8" vertical="center" paddingRight="4">
                 {about.avatar.display && (
-                  <Avatar
-                    marginRight="8"
-                    style={{ marginLeft: "-0.75rem", width: 32, height: 32 }}
+                  <Image
                     src={person.avatar}
-                    size="m"
+                    alt="Victor Rocha"
+                    width={32}
+                    height={32}
+                    priority
+                    style={{
+                      marginLeft: "-0.75rem",
+                      marginRight: "8px",
+                      borderRadius: "999px",
+                    }}
                   />
                 )}
+
                 {currentLanguage === "pt" ? "Minha Jornada" : "My Journey"}
               </Row>
             </Button>
@@ -181,7 +189,12 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
                   </Heading>
                 </Row>
                 <Row flex={3} paddingX="20">
-                  <Posts range={[1, 2]} posts={blogPosts} thumbnail />
+                  <Posts
+                    range={[1, 2]}
+                    posts={blogPosts}
+                    thumbnail
+                    showDate={false}
+                  />
                 </Row>
               </Row>
               <Row fillWidth paddingLeft="64" horizontal="end">

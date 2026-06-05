@@ -16,6 +16,9 @@ import { baseURL, about, blog, person } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { getPosts } from "@/utils/utils";
 import { generateOGUrl } from "@/utils/generateOGUrl";
+import { readingTime } from "@/utils/readingTime";
+import { ReadingProgress } from "@/components/blog/ReadingProgress";
+import { PostViews } from "@/components/blog/PostViews";
 import { Metadata } from "next";
 import React from "react";
 import { Posts } from "@/components/blog/Posts";
@@ -86,6 +89,7 @@ export default async function Blog({
 
   return (
     <Row fillWidth>
+      <ReadingProgress />
       <DynamicTabTitle
         titlePt={post.metadata.title_pt}
         titleEn={post.metadata.title_en}
@@ -129,6 +133,22 @@ export default async function Blog({
               {post.metadata.publishedAt &&
                 formatDate(post.metadata.publishedAt)}
             </Text>
+
+            {/* Reading time + views */}
+            <Row
+              gap="16"
+              horizontal="center"
+              vertical="center"
+              marginBottom="4"
+            >
+              <Text variant="body-default-xs" onBackground="neutral-weak">
+                {readingTime(post.content)} min read
+              </Text>
+              <Text variant="body-default-xs" onBackground="neutral-weak">
+                ·
+              </Text>
+              <PostViews slug={slugPath} track={true} />
+            </Row>
 
             <DynamicTitle
               fallback={post.metadata.title}

@@ -1,0 +1,234 @@
+/* ── Heatmap ────────────────────────────────────────────────── */
+
+.heatmapCard {
+  position: relative;
+  padding: 16px;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid
+    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
+  background: var(
+    --scheme-background-neutral-surface,
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.heatmapScroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+
+  /* Esconde a barra de rolagem no Firefox */
+  scrollbar-width: none;
+
+  /* Esconde a barra de rolagem no IE e Edge legado */
+  -ms-overflow-style: none;
+
+  /* Esconde a barra de rolagem no Chrome/Edge/Safari (WebKit) */
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+.heatmap {
+  display: flex;
+  gap: 3px;
+  min-width: max-content;
+}
+
+.heatmapCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.cell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  cursor: default;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.8;
+    outline: 1px solid var(--scheme-border-neutral-medium);
+    outline-offset: 1px;
+  }
+}
+
+/* Color levels — aligned with the portfolio's violet brand */
+.level0 {
+  background: var(
+    --scheme-background-neutral-surface,
+    rgba(255, 255, 255, 0.25)
+  );
+  opacity: 0.6;
+}
+
+.level1 {
+  background: #4a2d7a;
+}
+
+.level2 {
+  background: #6b3fa8;
+}
+
+.level3 {
+  background: #8b55d4;
+}
+
+.level4 {
+  background: #a78bfa;
+}
+
+/* ── Legenda do Heatmap ─────────────────────────────────────── */
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.legendText {
+  font-size: 12px;
+  color: var(--scheme-text-neutral-weak, #888);
+  margin: 0 4px;
+}
+
+/* ── Tooltip com estilo do GitHub ───────────────────────────── */
+.tooltip {
+  position: absolute;
+  /* O deslocamento Y acomoda a altura do tooltip + a seta */
+  transform: translate(-50%, calc(-100% - 8px));
+  background: var(--scheme-background-neutral-strong, #24292f);
+  color: var(--scheme-text-neutral-strong, #fff);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 6px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  /* Setinha apontando para baixo */
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    /* Herda a cor do fundo do tooltip para fazer a ponta perfeitamente integrada */
+    border-color: var(--scheme-background-neutral-strong, #24292f) transparent
+      transparent transparent;
+  }
+}
+
+/* ── Skeleton ───────────────────────────────────────────────── */
+
+@keyframes shimmer {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.skeletonHeatmap {
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.skeletonCol {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.skeletonCell {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--scheme-background-neutral-medium, #222);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* ── Repo Grid ──────────────────────────────────────────────── */
+
+.repoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.repoCard {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid
+    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
+  background: var(
+    --scheme-background-neutral-surface,
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    border-color: var(--scheme-border-brand-medium);
+    background: var(--scheme-background-brand-weak);
+  }
+}
+
+.repoCardSkeleton {
+  height: 110px;
+  border-radius: var(--radius-m, 8px);
+  border: 1px solid
+    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
+  background: var(
+    --scheme-background-neutral-surface,
+    rgba(255, 255, 255, 0.03)
+  );
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* Language dot */
+.langDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* View All Links */
+.viewAllLink {
+  width: fit-content;
+  transition:
+    transform var(--transition-micro-medium),
+    color var(--transition-micro-medium);
+
+  &:hover {
+    transform: translateX(var(--static-space-8));
+  }
+}
