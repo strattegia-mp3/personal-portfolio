@@ -15,6 +15,7 @@ import { baseURL, about, person, work } from "@/resources";
 import { formatDate } from "@/utils/formatDate";
 import { ScrollToHash, CustomMDX } from "@/components";
 import { generateOGUrl } from "@/utils/generateOGUrl";
+import { readingTime } from "@/utils/readingTime";
 import { Metadata } from "next";
 import { Projects } from "@/components/work/Projects";
 import { DynamicTitle } from "@/components/mdx/DynamicTitle";
@@ -59,6 +60,10 @@ export async function generateMetadata({
       description: post.metadata.summary,
       type: "work",
       tag: post.metadata.tag,
+      date: post.metadata.publishedAt
+        ? formatDate(post.metadata.publishedAt)
+        : undefined,
+      readTime: readingTime(post.content),
     }),
     path: `${work.path}/${post.slug}`,
   });

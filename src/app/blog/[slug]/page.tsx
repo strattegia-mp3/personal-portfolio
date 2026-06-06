@@ -65,6 +65,10 @@ export async function generateMetadata({
       description: post.metadata.summary,
       type: "blog",
       tag: post.metadata.tag,
+      date: post.metadata.publishedAt
+        ? formatDate(post.metadata.publishedAt)
+        : undefined,
+      readTime: readingTime(post.content),
     }),
     path: `${blog.path}/${post.slug}`,
   });

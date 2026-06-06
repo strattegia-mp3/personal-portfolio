@@ -17,12 +17,16 @@ export function generateOGUrl({
   description,
   type,
   tag,
+  date,
+  readTime,
 }: {
   baseURL: string;
   title: string;
   description?: string;
   type?: "blog" | "work" | "page";
   tag?: string;
+  date?: string;
+  readTime?: number | string;
 }): string {
   const url = new URL("/api/og", baseURL);
 
@@ -30,6 +34,8 @@ export function generateOGUrl({
   if (description) url.searchParams.set("description", description);
   if (type) url.searchParams.set("type", type);
   if (tag) url.searchParams.set("tag", tag);
+  if (date) url.searchParams.set("date", date);
+  if (readTime) url.searchParams.set("readTime", readTime.toString());
 
   return url.toString();
 }
