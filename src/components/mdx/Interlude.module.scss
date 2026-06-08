@@ -1,0 +1,27 @@
+.interlude {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--neutral-border-medium),
+    transparent
+  );
+}
+
+.ornament {
+  flex-shrink: 0;
+  font-size: 14px;
+  letter-spacing: 0.35em;
+  color: var(--brand-solid-medium);
+  opacity: 0.8;
+  user-select: none;
+  text-shadow: 0 0 12px var(--brand-alpha-strong);
+}

@@ -20,6 +20,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import TableOfContents from "@/components/about/TableOfContents";
 import styles from "@/components/about/about.module.scss";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import { CVDownload } from "@/components/about/CVDownload";
 import dynamic from "next/dynamic";
 
 const GitHubActivity = dynamic(
@@ -30,7 +31,7 @@ const GitHubActivity = dynamic(
 const OG_IMAGE = "/images/og/about.webp";
 
 export default function AboutView() {
-  const { content } = useLanguage();
+  const { content, currentLanguage } = useLanguage();
   const { person, about, social } = content;
 
   const structure = [
@@ -183,7 +184,11 @@ export default function AboutView() {
                   name="calendar"
                   onBackground="brand-weak"
                 />
-                <Row paddingX="8">Schedule a call</Row>
+                <Row paddingX="8">
+                  {currentLanguage === "pt"
+                    ? "Agendar conversa"
+                    : "Schedule a call"}
+                </Row>
                 <IconButton
                   href={about.calendar.link}
                   data-border="rounded"
@@ -245,6 +250,11 @@ export default function AboutView() {
                   )}
               </Row>
             )}
+
+            {/* ── CV Download ─────────────────────────────── */}
+            <Row className={styles.blockAlign} paddingTop="8" fitWidth>
+              <CVDownload />
+            </Row>
           </Column>
 
           {about.intro.display && (

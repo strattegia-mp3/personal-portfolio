@@ -4,7 +4,6 @@ import {
   Meta,
   Schema,
   Column,
-  HeadingNav,
   Row,
   Text,
   SmartLink,
@@ -23,8 +22,12 @@ import { Metadata } from "next";
 import React from "react";
 import { Posts } from "@/components/blog/Posts";
 import { ShareSection } from "@/components/blog/ShareSection";
+import { ReadingTime } from "@/components/blog/ReadingTime";
 import { DynamicTitle } from "@/components/mdx/DynamicTitle";
 import { DynamicTabTitle } from "@/components/i18n/DynamicTabTitle";
+import { AdUnit } from "@/components/ads/AdUnit";
+import { StickyAd } from "@/components/ads/StickyAd";
+import { I18nHeadingNav } from "@/components/blog/I18nHeadingNav";
 import {
   BlogLabel,
   NoMorePostsMessage,
@@ -101,7 +104,17 @@ export default async function Blog({
         suffixPt=" | Blog"
         suffixEn=" | Blog"
       />
-      <Row maxWidth={12} m={{ hide: true }} />
+
+      <style>{`
+        @media (max-width: 1023px) {
+          .desktop-sidebar {
+            display: none !important;
+          }
+        }
+      `}</style>
+
+      <Row maxWidth={12} className="desktop-sidebar" />
+
       <Row fillWidth horizontal="center">
         <Column
           as="section"
@@ -145,9 +158,7 @@ export default async function Blog({
               vertical="center"
               marginBottom="4"
             >
-              <Text variant="body-default-xs" onBackground="neutral-weak">
-                {readingTime(post.content)} min read
-              </Text>
+              <ReadingTime minutes={readingTime(post.content)} />
               <Text variant="body-default-xs" onBackground="neutral-weak">
                 ·
               </Text>
@@ -196,14 +207,24 @@ export default async function Blog({
             <CustomMDX source={post.content} />
           </Column>
 
+          {/* Ad placement 1 — between article and share section */}
+          <AdUnit
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_POST ?? ""}
+            format="horizontal"
+          />
+
           <ShareSection
             title={post.metadata.title}
             url={`${baseURL}${blog.path}/${post.slug}`}
           />
 
-          <Column fillWidth gap="24" horizontal="center">
-            <Line maxWidth="48" />
+          {/* Ad placement 2 — after share, before related posts */}
+          <AdUnit
+            slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER ?? ""}
+            format="auto"
+          />
 
+          <Column fillWidth gap="24" horizontal="center">
             <RecentPostsTitle />
 
             {/* Verifica se existem outros posts para exibir */}
@@ -225,15 +246,25 @@ export default async function Blog({
         </Column>
       </Row>
       <Column
+        className="desktop-sidebar"
         maxWidth={12}
         paddingLeft="40"
-        fitHeight
         position="sticky"
         top="80"
-        gap="16"
-        m={{ hide: true }}
+        style={{
+          alignSelf: "flex-start",
+          maxHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          overflowY: "auto",
+          overflowX: "hidden",
+          gap: "32px",
+          scrollbarWidth: "thin",
+          scrollbarColor: "var(--neutral-alpha-medium) transparent",
+        }}
       >
-        <HeadingNav fitHeight />
+        <I18nHeadingNav />
+        <StickyAd slot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR ?? ""} />
       </Column>
     </Row>
   );

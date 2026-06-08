@@ -48,6 +48,7 @@ import {
   FaGears,
   FaCubes,
   FaPuzzlePiece,
+  FaSquareRss
 } from "react-icons/fa6";
 
 import {
@@ -128,6 +129,7 @@ export const iconLibrary: Record<string, IconType> = {
   reddit: FaReddit,
   telegram: FaTelegram,
   instagram: FaInstagram,
+  rss: FaSquareRss
 };
 
 export type IconLibrary = typeof iconLibrary;

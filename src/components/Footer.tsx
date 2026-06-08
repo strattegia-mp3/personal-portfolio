@@ -26,7 +26,7 @@ export const Footer = () => {
         className={styles.mobile}
         maxWidth="m"
         paddingY="8"
-        paddingX="16"
+        paddingX="32"
         gap="16"
         horizontal="between"
         vertical="center"
@@ -47,7 +47,7 @@ export const Footer = () => {
             </SmartLink>
           </Text>
         </Text>
-        <Row gap="16">
+        <Row gap="16" vertical="center">
           {social.map(
             (item) =>
               item.link && (

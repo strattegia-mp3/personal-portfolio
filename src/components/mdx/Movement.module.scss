@@ -1,0 +1,40 @@
+.movement {
+  position: relative;
+}
+
+/* ── Roman numeral badge ─────────────────────────── */
+
+.numeral {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--brand-border-medium);
+  background: var(--brand-alpha-weak);
+  box-shadow: 0 4px 12px var(--brand-alpha-weak);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.numeralText {
+  font-size: 13px !important;
+  letter-spacing: 0.12em;
+  color: var(--brand-solid-medium) !important;
+  font-variant-numeric: oldstyle-nums;
+  font-weight: 700;
+}
+
+/* ── Title ───────────────────────────────────────── */
+
+.title {
+  letter-spacing: -0.025em;
+}
+
+/* ── Subtitle / tempo marking ────────────────────── */
+
+.subtitle {
+  font-style: italic;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}

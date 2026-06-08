@@ -1,0 +1,44 @@
+.epigraph {
+  position: relative;
+  padding: 30px 40px;
+  border-left: 3px solid var(--brand-border-medium);
+  background: var(--brand-alpha-weak);
+  border-radius: 0 8px 8px 0;
+  margin: 0;
+  font-style: italic;
+
+  &::before {
+    content: "\201C";
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    font-size: 72px;
+    line-height: 1;
+    color: var(--brand-solid-medium);
+    opacity: 0.15;
+    font-family: Georgia, "Times New Roman", serif;
+    pointer-events: none;
+  }
+}
+
+.quote {
+  font-style: italic !important;
+  line-height: 1.7 !important;
+  position: relative;
+  z-index: 1;
+}
+
+.attribution {
+  display: block;
+  margin-top: 12px;
+  font-style: normal !important;
+}
+
+.dash {
+  margin-right: 6px;
+  color: var(--brand-solid-medium);
+}
+
+.work {
+  opacity: 0.8;
+}

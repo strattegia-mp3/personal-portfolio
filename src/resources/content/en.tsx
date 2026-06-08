@@ -59,7 +59,7 @@ export const en: ContentTranslation = {
       "The path of an entrepreneur and computer scientist in the making, focused on accessible technology.",
     tableOfContent: { display: true, subItems: false },
     avatar: { display: true },
-    calendar: { display: false, link: "https://cal.com/victor-rocha" },
+    calendar: { display: true, link: "https://cal.com/victor-rocha" },
     intro: {
       display: true,
       title: "Who I Am",
@@ -310,7 +310,7 @@ export const en: ContentTranslation = {
   },
   chat: {
     fab: "Chat with Tori",
-    fabTooltip: "Chat with Tori 🐶",
+    fabTooltip: "Chat with Tori",
     title: "Chat with Tori",
     subtitle: "Ask about Victor's career and projects",
     placeholder: "Ask a question…",

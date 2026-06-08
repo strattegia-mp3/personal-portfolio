@@ -75,6 +75,7 @@ export default function ChatWidget() {
   const [portalNode, setPortalNode] = useState<HTMLElement | null>(null);
   const [open, setOpen] = useState(false);
   const [announced, setAnnounced] = useState(false);
+  const [tooltipDismissed, setTooltipDismissed] = useState(false);
 
   const { content } = useLanguage();
   const t = content.chat;
@@ -115,6 +116,12 @@ export default function ChatWidget() {
     swipeStartY.current = null;
     isDraggingHandle.current = false;
   }, [swipeOffset]);
+
+  // ── Auto-dismiss tooltip após 5.5s ──
+  useEffect(() => {
+    const timer = setTimeout(() => setTooltipDismissed(true), 5500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // ── Portal root ───────────────────────────────────────────────────────
   useEffect(() => {
@@ -258,7 +265,9 @@ export default function ChatWidget() {
         className={`${styles.fabContainer} ${open ? styles.fabContainerHidden : ""}`}
         style={{ pointerEvents: "auto" }}
       >
-        {!open && <div className={styles.tooltipBubble}>{t.fabTooltip}</div>}
+        {!open && !tooltipDismissed && (
+          <div className={styles.tooltipBubble}>{t.fabTooltip}</div>
+        )}
         <button
           className={styles.fab}
           onClick={handleOpen}

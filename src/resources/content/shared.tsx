@@ -32,6 +32,12 @@ export const SOCIAL = [
     link: "mailto:strattegiadev@gmail.com",
     essential: true,
   },
+  {
+    name: "RSS",
+    icon: "rss",
+    link: "/api/rss",
+    essential: true,
+  },
 ] as const;
 
 export const PATHS = {

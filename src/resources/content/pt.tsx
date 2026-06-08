@@ -59,7 +59,7 @@ export const pt: ContentTranslation = {
       "A trajetória de um empreendedor e cientista da computação em formação, focado em tecnologia acessível.",
     tableOfContent: { display: true, subItems: false },
     avatar: { display: true },
-    calendar: { display: false, link: "https://cal.com/victor-rocha" },
+    calendar: { display: true, link: "https://cal.com/victor-rocha" },
     intro: {
       display: true,
       title: "Quem sou eu",
@@ -314,7 +314,7 @@ export const pt: ContentTranslation = {
   },
   chat: {
     fab: "Chat com Tori",
-    fabTooltip: "Converse com Tori 🐶",
+    fabTooltip: "Converse com Tori",
     title: "Chat com Tori",
     subtitle: "Pergunte sobre a carreira e projetos do Victor",
     placeholder: "Faça uma pergunta…",

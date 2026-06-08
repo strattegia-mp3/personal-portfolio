@@ -1,15 +1,10 @@
 /* ── Heatmap ────────────────────────────────────────────────── */
-
 .heatmapCard {
   position: relative;
   padding: 16px;
   border-radius: var(--radius-m, 8px);
-  border: 1px solid
-    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
-  background: var(
-    --scheme-background-neutral-surface,
-    rgba(255, 255, 255, 0.03)
-  );
+  border: 1px solid var(--neutral-border-medium);
+  background: var(--neutral-alpha-weak);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
@@ -48,22 +43,20 @@
   height: 11px;
   border-radius: 2px;
   cursor: default;
-  transition: opacity 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    outline-color 0.15s ease;
 
   &:hover {
     opacity: 0.8;
-    outline: 1px solid var(--scheme-border-neutral-medium);
+    outline: 1px solid var(--neutral-border-strong);
     outline-offset: 1px;
   }
 }
 
 /* Color levels — aligned with the portfolio's violet brand */
 .level0 {
-  background: var(
-    --scheme-background-neutral-surface,
-    rgba(255, 255, 255, 0.25)
-  );
-  opacity: 0.6;
+  background: var(--neutral-alpha-medium);
 }
 
 .level1 {
@@ -93,17 +86,16 @@
 
 .legendText {
   font-size: 12px;
-  color: var(--scheme-text-neutral-weak, #888);
+  color: var(--neutral-on-background-weak);
   margin: 0 4px;
 }
 
 /* ── Tooltip com estilo do GitHub ───────────────────────────── */
 .tooltip {
   position: absolute;
-  /* O deslocamento Y acomoda a altura do tooltip + a seta */
   transform: translate(-50%, calc(-100% - 8px));
-  background: var(--scheme-background-neutral-strong, #24292f);
-  color: var(--scheme-text-neutral-strong, #fff);
+  background: var(--neutral-solid-strong);
+  color: var(--neutral-solid-on-strong);
   font-size: 12px;
   font-weight: 500;
   line-height: 1.4;
@@ -123,23 +115,21 @@
     transform: translateX(-50%);
     border-width: 5px;
     border-style: solid;
-    /* Herda a cor do fundo do tooltip para fazer a ponta perfeitamente integrada */
-    border-color: var(--scheme-background-neutral-strong, #24292f) transparent
-      transparent transparent;
+    border-color: var(--neutral-solid-strong) transparent transparent
+      transparent;
   }
 }
 
 /* ── Skeleton ───────────────────────────────────────────────── */
-
 @keyframes shimmer {
   0% {
-    opacity: 0.4;
+    opacity: 0.3;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.6;
   }
   100% {
-    opacity: 0.4;
+    opacity: 0.3;
   }
 }
 
@@ -159,12 +149,11 @@
   width: 11px;
   height: 11px;
   border-radius: 2px;
-  background: var(--scheme-background-neutral-medium, #222);
+  background: var(--neutral-alpha-strong);
   animation: shimmer 1.6s ease-in-out infinite;
 }
 
 /* ── Repo Grid ──────────────────────────────────────────────── */
-
 .repoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -176,13 +165,9 @@
   flex-direction: column;
   padding: 16px;
   border-radius: var(--radius-m, 8px);
-  border: 1px solid
-    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
-  background: var(
-    --scheme-background-neutral-surface,
-    rgba(255, 255, 255, 0.03)
-  );
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--neutral-border-medium);
+  background: var(--neutral-alpha-weak);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
   text-decoration: none;
   transition:
     transform 0.2s ease,
@@ -193,22 +178,17 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    border-color: var(--scheme-border-brand-medium);
-    background: var(--scheme-background-brand-weak);
+    box-shadow: 0 8px 24px var(--neutral-alpha-medium);
+    border-color: var(--brand-border-medium);
+    background: var(--brand-alpha-weak);
   }
 }
 
 .repoCardSkeleton {
   height: 110px;
   border-radius: var(--radius-m, 8px);
-  border: 1px solid
-    var(--scheme-border-neutral-medium, rgba(255, 255, 255, 0.1));
-  background: var(
-    --scheme-background-neutral-surface,
-    rgba(255, 255, 255, 0.03)
-  );
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--neutral-border-medium);
+  background: var(--neutral-alpha-weak);
   animation: shimmer 1.6s ease-in-out infinite;
 }
 

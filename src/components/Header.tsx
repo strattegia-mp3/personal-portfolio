@@ -1,13 +1,49 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Fade, Flex, Line, Row, ToggleButton } from "@once-ui-system/core";
 import { routes, display } from "@/resources";
 import { useLanguage } from "@/components/LanguageContext";
 import { LanguageToggle } from "./LanguageToggle";
 import { ThemeToggle } from "./ThemeToggle";
 import styles from "./Header.module.scss";
+
+/* ── Search trigger — opens the global CommandPalette via custom event ── */
+function SearchTrigger() {
+  const [isMac, setIsMac] = useState(true);
+
+  useEffect(() => {
+    setIsMac(navigator.userAgent.toUpperCase().indexOf("MAC") >= 0);
+  }, []);
+
+  const open = useCallback(() => {
+    window.dispatchEvent(new CustomEvent("open-search"));
+  }, []);
+
+  return (
+    <button
+      className={styles.searchTrigger}
+      onClick={open}
+      aria-label={`Search (${isMac ? "⌘" : "Ctrl+"}K)`}
+      title={`Search (${isMac ? "⌘" : "Ctrl+"}K)`}
+    >
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        aria-hidden="true"
+      >
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <span className={styles.searchKbd}>{isMac ? "⌘K" : "Ctrl K"}</span>
+    </button>
+  );
+}
 
 type TimeDisplayProps = {
   timeZone: string;
@@ -63,9 +99,15 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({
 
 export const Header = () => {
   const pathname = usePathname() ?? "";
+  const [mounted, setMounted] = useState(false);
 
   const { content, currentLanguage } = useLanguage();
   const { person, about, work, blog, gallery } = content;
+
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   return (
     <>
@@ -98,6 +140,10 @@ export const Header = () => {
         data-border="rounded"
         s={{
           position: "fixed",
+        }}
+        style={{
+          opacity: mounted ? 1 : 0,
+          transition: mounted ? "opacity 0.18s ease" : "none",
         }}
       >
         <Row
@@ -211,6 +257,8 @@ export const Header = () => {
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
               <LanguageToggle />
               {display.themeSwitcher && <ThemeToggle />}
+              <Line background="neutral-alpha-medium" vert maxHeight="24" />
+              <SearchTrigger />
             </Row>
           </Row>
         </Row>

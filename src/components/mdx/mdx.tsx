@@ -27,6 +27,11 @@ import {
 import { HeadingLink } from "@/components/HeadingLink";
 import { Pt, En } from "@/components/mdx/LanguageWrapper";
 import { Figure } from "@/components/mdx/Figure";
+import { Movement } from "@/components/mdx/Movement";
+import { Epigraph } from "@/components/mdx/Epigraph";
+import { Interlude } from "@/components/mdx/Interlude";
+import { Annotation } from "@/components/mdx/Annotation";
+import { Coda } from "@/components/mdx/Coda";
 
 function extractText(node: ReactNode): string {
   if (typeof node === "string") return node;
@@ -107,8 +112,8 @@ function createHeading(level: 1 | 2 | 3 | 4 | 5 | 6) {
       level === 2
         ? { marginTop: "40", marginBottom: "24" }
         : level === 3
-        ? { marginTop: "32", marginBottom: "16" }
-        : { marginTop: "24", marginBottom: "12" };
+          ? { marginTop: "32", marginBottom: "16" }
+          : { marginTop: "24", marginBottom: "12" };
 
     return (
       <HeadingLink level={level} id={slug} {...margins} {...props}>
@@ -246,6 +251,11 @@ const components = {
   Pt,
   En,
   Figure,
+  Movement,
+  Epigraph,
+  Interlude,
+  Annotation,
+  Coda,
 };
 
 type CustomMDXProps = MDXRemoteProps & {
@@ -256,10 +266,12 @@ export function CustomMDX(props: CustomMDXProps) {
   return (
     <MDXRemote
       {...props}
-      options={{
-        ...(props.options || {}),
-        blockJS: false,
-      } as any}
+      options={
+        {
+          ...(props.options || {}),
+          blockJS: false,
+        } as any
+      }
       components={{ ...components, ...(props.components || {}) }}
     />
   );

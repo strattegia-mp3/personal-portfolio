@@ -43,6 +43,19 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
   const { content, currentLanguage } = useLanguage();
   const { home, about, person, blog } = content;
 
+  // ⚡ LÓGICA DE DESTAQUE: Garante que o post com "highlight: true"
+  // seja o primeiro a aparecer na Home.
+  const sortedBlogPosts = [...blogPosts].sort((a, b) => {
+    const aHighlight =
+      a.metadata.highlight === "true" || a.metadata.highlight === true;
+    const bHighlight =
+      b.metadata.highlight === "true" || b.metadata.highlight === true;
+
+    if (aHighlight && !bHighlight) return -1;
+    if (!aHighlight && bHighlight) return 1;
+    return 0;
+  });
+
   return (
     <Column maxWidth="m" gap="xl" paddingY="12" horizontal="center">
       <DynamicTabTitle
@@ -84,7 +97,7 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
         }
       `}</style>
 
-      {/* Hero Section — animações CSS puras, sem RevealFx, sem hidratação adicional */}
+      {/* Hero Section */}
       <Column fillWidth horizontal="center" gap="m">
         <Column maxWidth="s" horizontal="center" align="center">
           {home.featured.display && (
@@ -138,39 +151,57 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
             horizontal="center"
             paddingLeft="12"
           >
-            <Button
-              id="about"
-              data-border="rounded"
-              href={about.path}
-              variant="secondary"
-              size="m"
-              weight="default"
-              arrowIcon
-            >
-              <Row gap="8" vertical="center" paddingRight="4">
-                {about.avatar.display && (
-                  <Image
-                    src={person.avatar}
-                    alt="Victor Rocha"
-                    width={32}
-                    height={32}
-                    priority
-                    style={{
-                      marginLeft: "-0.75rem",
-                      marginRight: "8px",
-                      borderRadius: "999px",
-                    }}
-                  />
-                )}
+            <Row gap="12" wrap horizontal="center">
+              <Button
+                id="about"
+                data-border="rounded"
+                href={about.path}
+                variant="secondary"
+                size="m"
+                weight="default"
+                arrowIcon
+              >
+                <Row gap="8" vertical="center" paddingRight="4">
+                  {about.avatar.display && (
+                    <Image
+                      src={person.avatar}
+                      alt="Victor Rocha"
+                      width={32}
+                      height={32}
+                      priority
+                      style={{
+                        marginLeft: "-0.75rem",
+                        marginRight: "8px",
+                        borderRadius: "999px",
+                      }}
+                    />
+                  )}
 
-                {currentLanguage === "pt" ? "Minha Jornada" : "My Journey"}
-              </Row>
-            </Button>
+                  {currentLanguage === "pt" ? "Minha Jornada" : "My Journey"}
+                </Row>
+              </Button>
+
+              {about.calendar.display && (
+                <Button
+                  id="schedule"
+                  data-border="rounded"
+                  href={about.calendar.link}
+                  variant="tertiary"
+                  size="m"
+                  weight="default"
+                  prefixIcon="calendar"
+                >
+                  {currentLanguage === "pt"
+                    ? "Agendar conversa"
+                    : "Schedule a call"}
+                </Button>
+              )}
+            </Row>
           </RevealFx>
         </Column>
       </Column>
 
-      {/* ─── Conteúdo Abaixo da Dobra — RevealFx seguro fora do viewport inicial ─── */}
+      {/* ─── Conteúdo Abaixo da Dobra ─── */}
       <Column fillWidth gap="xl" style={{ display: "contents" }}>
         <RevealFx translateY="12" delay={0.2}>
           <Projects range={[1, 1]} posts={projectPosts} />
@@ -188,14 +219,47 @@ export default function HomeView({ blogPosts, projectPosts }: HomeViewProps) {
                     {blog.title}
                   </Heading>
                 </Row>
-                <Row flex={3} paddingX="20">
-                  <Posts
-                    range={[1, 2]}
-                    posts={blogPosts}
-                    thumbnail
-                    showDate={false}
-                  />
-                </Row>
+                <Column flex={3} gap="24" paddingX="20">
+                  {/* ⚡ Separação de Destaque na Home */}
+                  {(() => {
+                    const highlightedPosts = blogPosts.filter(
+                      (p) =>
+                        p.metadata.highlight === "true" ||
+                        p.metadata.highlight === true,
+                    );
+                    const highlightedPost =
+                      highlightedPosts.length > 0 ? highlightedPosts[0] : null;
+                    const normalPosts = blogPosts.filter(
+                      (p) => p.slug !== highlightedPost?.slug,
+                    );
+
+                    return highlightedPost ? (
+                      <>
+                        <Posts
+                          range={[1, 1]}
+                          posts={[highlightedPost]}
+                          thumbnail
+                          showDate={false}
+                        />
+                        {normalPosts.length > 0 && (
+                          <Posts
+                            range={[1, 2]}
+                            posts={normalPosts}
+                            columns="2"
+                            showDate={false}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <Posts
+                        range={[1, 2]}
+                        posts={normalPosts}
+                        thumbnail
+                        showDate={false}
+                      />
+                    );
+                  })()}
+                </Column>
               </Row>
               <Row fillWidth paddingLeft="64" horizontal="end">
                 <Line maxWidth={48} />

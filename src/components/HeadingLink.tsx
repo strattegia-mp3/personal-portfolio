@@ -51,7 +51,7 @@ export const HeadingLink: React.FC<HeadingLinkProps> = ({
           variant: "danger",
           message: t.error,
         });
-      }
+      },
     );
   };
 

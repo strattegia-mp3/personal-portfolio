@@ -1,6 +1,7 @@
 "use client";
 
-import { Card, Column, Media, Row, Avatar, Text } from "@once-ui-system/core";
+import { Card, Column, Media, Row, Text } from "@once-ui-system/core";
+import Image from "next/image";
 import { formatDate } from "@/utils/formatDate";
 import { readingTime } from "@/utils/readingTime";
 import { useLanguage } from "@/components/LanguageContext";
@@ -74,10 +75,16 @@ export default function Post({
         >
           <Row gap="24" vertical="center">
             <Row vertical="center" gap="16">
-              <Avatar
+              <Image
                 src={person.avatar}
-                size="s"
-                style={{ width: 32, height: 32, flexShrink: 0 }}
+                alt={person.name}
+                width={32}
+                height={32}
+                style={{
+                  borderRadius: "999px",
+                  flexShrink: 0,
+                  objectFit: "cover",
+                }}
               />
               <Text variant="label-default-s">{person.name}</Text>
             </Row>

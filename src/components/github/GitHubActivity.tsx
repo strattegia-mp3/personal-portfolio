@@ -87,7 +87,7 @@ export default function GitHubActivity() {
       setTooltip({
         text: t.contribTooltip(day.contributionCount, day.date),
         x: rect.left - (parent?.left ?? 0) + rect.width / 2,
-        y: rect.top - (parent?.top ?? 0), // O calc() no CSS fará o ajuste da distância
+        y: rect.top - (parent?.top ?? 0),
       });
     },
     [t],

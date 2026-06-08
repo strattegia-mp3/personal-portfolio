@@ -12,10 +12,12 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { ClientOnlyWidgets } from "@/components/client/ClientOnlyWidgets";
 import { baseURL, effects, fonts, style, dataStyle, home } from "@/resources";
+import { getPosts } from "@/utils/utils";
 import { Viewport } from "next";
 
 const OG_IMAGE = "/images/og/about.webp";
@@ -116,6 +118,19 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeScript }}
         />
         <link rel="preload" as="image" href="/images/avatars/victor.webp" />
+        {/* RSS feeds */}
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Victor Rocha – Blog (EN)"
+          href="/api/rss"
+        />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Victor Rocha – Blog (PT)"
+          href="/api/rss?lang=pt"
+        />
       </head>
       <Providers>
         <LanguageProvider>
@@ -187,13 +202,23 @@ export default async function RootLayout({
               </Flex>
             </Flex>
             <Footer />
-            <ClientOnlyWidgets />
+            <ClientOnlyWidgets
+              posts={getPosts(["src", "app", "blog", "posts"])}
+              projects={getPosts(["src", "app", "work", "projects"])}
+            />
             {process.env.NODE_ENV === "production" && (
               <>
                 <Analytics />
                 <SpeedInsights />
                 {process.env.NEXT_PUBLIC_GA_ID && (
                   <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+                )}
+                {process.env.NEXT_PUBLIC_ADSENSE_CLIENT && (
+                  <Script
+                    src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.NEXT_PUBLIC_ADSENSE_CLIENT}`}
+                    strategy="afterInteractive"
+                    crossOrigin="anonymous"
+                  />
                 )}
               </>
             )}

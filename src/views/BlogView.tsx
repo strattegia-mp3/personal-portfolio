@@ -11,6 +11,10 @@ const RevealFx = dynamic(() =>
   import("@once-ui-system/core").then((mod) => mod.RevealFx),
 );
 
+const Mailchimp = dynamic(() =>
+  import("@/components").then((mod) => mod.Mailchimp),
+);
+
 const OG_IMAGE = "/images/og/about.webp";
 
 interface BlogViewProps {
@@ -18,8 +22,17 @@ interface BlogViewProps {
 }
 
 export default function BlogView({ posts }: BlogViewProps) {
-  const { content } = useLanguage();
+  const { content, currentLanguage } = useLanguage();
   const { blog, person } = content;
+
+  // Encontra o post marcado com highlight e separa do resto para impedir
+  // que o componente <Posts> reordene tudo internamente por data.
+  const highlightedPosts = posts.filter(
+    (p) => p.metadata.highlight === "true" || p.metadata.highlight === true,
+  );
+  const highlightedPost =
+    highlightedPosts.length > 0 ? highlightedPosts[0] : null;
+  const normalPosts = posts.filter((p) => p.slug !== highlightedPost?.slug);
 
   return (
     <Column maxWidth="m" paddingTop="24" horizontal="center">
@@ -52,6 +65,7 @@ export default function BlogView({ posts }: BlogViewProps) {
           image: `${baseURL}${person.avatar}`,
         }}
       />
+
       <Column fillWidth gap="m" align="center" marginBottom="xl">
         <Heading
           className="hero-title"
@@ -71,9 +85,65 @@ export default function BlogView({ posts }: BlogViewProps) {
           </Text>
         )}
       </Column>
+
       <RevealFx fillWidth translateY="20" delay={0.1}>
-        <Column fillWidth>
-          <Posts posts={posts} columns="2" />
+        <Column fillWidth flex={1} gap="40">
+          {highlightedPost ? (
+            <>
+              {/* Post Destaque Isolado */}
+              <Posts posts={[highlightedPost]} range={[1, 1]} thumbnail />
+
+              {/* Próximos 2 posts em coluna dupla */}
+              {normalPosts.length > 0 && (
+                <Posts
+                  posts={normalPosts}
+                  range={[1, 2]}
+                  columns="2"
+                  thumbnail
+                  direction="column"
+                />
+              )}
+
+              <Mailchimp marginBottom="l" />
+
+              {/* Artigos Anteriores */}
+              {normalPosts.length > 2 && (
+                <>
+                  <Heading as="h2" variant="heading-strong-xl" marginLeft="l">
+                    {currentLanguage === "pt"
+                      ? "Artigos anteriores"
+                      : "Earlier posts"}
+                  </Heading>
+                  <Posts posts={normalPosts} range={[3]} columns="2" />
+                </>
+              )}
+            </>
+          ) : (
+            /* Fallback caso nenhum post tenha o highlight="true" no .mdx */
+            <>
+              <Posts posts={normalPosts} range={[1, 1]} thumbnail />
+              {normalPosts.length > 1 && (
+                <Posts
+                  posts={normalPosts}
+                  range={[2, 3]}
+                  columns="2"
+                  thumbnail
+                  direction="column"
+                />
+              )}
+              <Mailchimp marginBottom="l" />
+              {normalPosts.length > 3 && (
+                <>
+                  <Heading as="h2" variant="heading-strong-xl" marginLeft="l">
+                    {currentLanguage === "pt"
+                      ? "Artigos anteriores"
+                      : "Earlier posts"}
+                  </Heading>
+                  <Posts posts={normalPosts} range={[4]} columns="2" />
+                </>
+              )}
+            </>
+          )}
         </Column>
       </RevealFx>
     </Column>
